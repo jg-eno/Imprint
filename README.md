@@ -17,4 +17,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip3 install flask
 ```
-
+3. Run the app
+```bash
+flask --app app run
+```
