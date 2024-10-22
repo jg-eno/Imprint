@@ -1,0 +1,150 @@
+.profileSection{
+    background: url('Background2.png') no-repeat center center;
+    height: 180vh;
+    background-size: cover;
+    /* display: flex; */
+   
+}
+
+.accountContent{
+    display: flex;  
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+/* Gradient Typography */
+.gradient-text {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2.9rem;
+    background: linear-gradient(45deg, #3b82f6, #f97316);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  
+  .tagline{
+    margin-left: 10%;
+    
+    justify-content: center;
+    align-content: center;
+    padding: 20px;
+  }
+
+  
+  
+/* Container styling */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    min-width: 700px;
+    /* margin:  ; */
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background-color:#0e0e0e;
+    color: var(--text-color);
+    box-shadow: 0 4px 10px rgba(240, 240, 242, 0.8);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+  
+  /* Light and dark mode colors */
+  .light {
+    --bg-color: #f9f9f9;
+    --text-color: #333;
+  }
+  
+  .dark {
+    --bg-color: #2c2c2c;
+    --text-color: #f0f0f0;
+  }
+  
+  /* Header section */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .theme-toggle {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .theme-toggle:hover {
+    color: #3b82f6;
+  }
+  
+  /* Form section */
+  .form-section {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .change-btn {
+     margin-bottom: 5px;
+  }
+  
+  
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: inherit;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Light/Dark input field colors */
+  .light .input-field {
+    background-color: #f0f0f0;
+  }
+  
+  .dark .input-field {
+    background-color: #444;
+  }
+  
+  .update-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .update-btn:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Remove account link */
+  .remove-account {
+    margin-top: 20px;
+    color: red;
+    width: 20%;
+    margin-left: 75%;
+    text-align: right;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .remove-account:hover {
+    text-decoration: underline;
+  }
+  

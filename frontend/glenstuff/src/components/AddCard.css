@@ -1,0 +1,41 @@
+.AddCardContainer{
+  background-color: #1f1f1f;
+  height: 100vh;
+  animation: fadeIn 2s ease-in-out;
+  
+}
+
+
+.container2{
+  padding: 20px;
+  width: 38%;
+  color:white ;
+  /* display: flex; */
+  background-color: darkslategray;
+  /* flex-direction: column; */
+  justify-content: center;
+  border-radius: 10px;
+  
+  align-items: center;
+  margin: 5% auto;
+  box-shadow: 0 0 10px 0 rgba(255, 238, 0, 0.2);
+  
+}
+
+
+.Heading{
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+  color: #ffcc00;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.AddCardButton{
+  margin: 0 auto;
+  margin-left: 40%;
+}
+
+.AddcardFrom{
+  padding: 5px;
+}

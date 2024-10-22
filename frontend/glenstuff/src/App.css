@@ -1,0 +1,571 @@
+
+/* login part */
+
+.loginHeader{
+  height: 65px;
+  background-color:#c51717;
+  
+}
+.ankiLogo{
+  display: flex;
+  align-items: space-around;
+  /* height: 70px; */
+}
+
+.NamePart{
+  display:flex;
+
+}
+
+.ResetPass{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: medium;
+    text-align: center;
+    margin-top: 4px;
+}
+
+.ResetPass a{
+  list-style: none;
+}
+.ResetPass:hover{
+ color: #ff004c;
+}
+
+.loginInfo{
+  text-align: center;
+  color: grey;
+  font-weight: 500;
+}
+
+.ankiNameLogin{
+  font-weight: 600;
+  font-size: larger;
+  color: rgb(0, 0, 0);
+  margin-right: 4px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Container holding both sides */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84.5vh;
+  /* background-color: #f4f4f4; */
+  
+  background-size:cover;
+  margin: 20px;
+  padding: 15px;
+}
+
+
+/* Left side for the image */
+.login-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  /* height: 100%; */
+  /* border-style:solid; */
+  /* border-radius: 10px; */
+  padding: 10px;
+}
+
+.login-image {
+  width: 100%;
+  /* max-width: 500px; */
+  max-height:80vh ;
+  /* border-radius: 10px; */
+}
+
+/* Right side for the form */
+.login-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border-style: groove; */
+  padding: 10px;
+  padding: 40px;
+  height: 82vh;
+  margin: 5px;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-field {
+  margin-bottom: 15px;
+}
+
+.login-button {
+  margin-top: 20px;
+  background-color: #1e88e5;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #1565c0;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Signup.css */
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 40px;
+  background-color: #f7f7f7;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.signup-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.signup-field {
+  margin-bottom: 15px;
+}
+
+.signUp button{
+  margin-right: 10px;
+}
+.loginInfo2{
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 490;
+  color: #333;
+}
+.signUp .btn-success{
+  background-color: white;
+  color: black;
+}
+
+.signUp .btn-success:hover{
+  background-color: #f0f0f0;
+  color: black;
+  font-weight: 500;
+}
+
+.signup-button {
+  margin-top: 20px;
+  background-color: #43a047;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.signup-button:hover {
+  background-color: #388e3c;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.SignupMessage{
+  margin-top: 15px;
+  text-align: center;
+  color: #4b4b4b;
+  font-weight: 400;
+  font-style: initial;
+}
+
+
+
+/* Header.css */
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+
+/* body {
+  font-family: Arial, sans-serif;
+
+} */
+header {
+  display: flex;
+  justify-content:space-around;
+  align-items: center;  
+  padding: 10px 20px;  
+  /* position: fixed; */
+   top: 0; 
+  z-index: 1000;
+}
+
+.LandingHeader{
+  color: rgb(255, 254, 254);
+  box-shadow: 0px 4px 8px rgba(102, 110, 247, 0.1);   
+}
+
+
+
+.logoAnki{
+  /* padding-top: 0px; */
+  padding-bottom: 8px;
+  display: flex;
+  color:aliceblue;
+  text-decoration: none;
+  /* color: rgb(1, 2, 6); */
+}
+.LogoName{
+  
+  font-size: 30px;
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-left: 10px;
+}
+
+.logo {
+  /* height: 30px; */
+  /* height: 60px; */
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  
+}
+
+.nav-links {
+  list-style-type: none;
+  display: flex;
+  /* color: rgb(194, 193, 193); */
+  font-weight: 600;
+  font-size:large;
+}
+
+.nav-links li {
+  margin: 0 15px;
+  
+}
+
+.nav-links li a {
+  text-decoration: none;
+  font-size: 18px;
+  /* color: #333; */
+  padding: 5px;
+  border-radius: 7px;
+  color: white;
+  transition: background-color 0.5s ease, transform 0.5s ease; 
+}
+
+.nav-links li a:hover {
+  /* color: #007bff; */
+  background-color: red;
+  /* transition: background-color 0.5s ease, transform 0.5s ease; 
+   */
+   transform: scale(1.05);  
+}
+
+.account-options {
+  display: flex;
+}
+
+.account-options a {
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 18px;
+  color:white;
+  padding: 5px;
+  border-radius: 10px;
+  transition: background-color 0.5s ease, transform 0.5s ease; 
+}
+
+.account-options a:hover {
+  color: #f0f2fb;
+  background-color: red;
+  /* transition: background-color 0.5s ease, transform 0.5s ease;  */
+  transform: scale(1.05);  
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 25px;
+  height: 3px;
+  background-color: #ebeaea;
+  margin: 4px 0;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #f4f4f4;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in;
+  }
+
+  .nav-links li {
+    margin: 20px 0;
+  }
+
+  .account-options {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-links.active {
+    transform: translateX(0);
+  }
+}
+
+
+
+/* LandingPage.css *//* LandingPage.css */
+.landing-container {
+  margin: 0px;
+  text-align: center;
+  padding: 50px;
+  /* background-color: #fff3f3;
+   */
+  min-height: 80vh;
+ 
+  display: flex;
+  
+   justify-content: center;
+  
+}
+
+.landing-container2{  
+  background: url('./fictional-planet-with-colourful-night-sky-stars-nebula.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.welcome-box {
+  /* background-color: #edecec; */
+  background-color: rgb(203, 203, 203); 
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0px 8px 16px rgba(218, 215, 215, 0.1);
+  opacity: 0.9;
+  width: 50%;
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+  height: 40%;
+}
+
+.welcome-title {
+  color: rgb(255, 42, 0);
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+.action-buttons {
+  margin-top: 30px;
+}
+
+.action-button {
+  /* margin: 10px 15px; */
+}
+
+.create-button {
+  background-color: #cb0505;
+  margin-right: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+  /* background: linear-gradient(135deg, #ff7e5f, #feb47b); */
+  transition: all 0.3s ease;
+
+}
+
+.create-button:hover {
+  background-color: #2588fa;
+
+}
+
+.view-button {
+  background-color: #f44336;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+  /* background: linear-gradient(135deg, #ff7e5f, #feb47b); */
+  transition: all 0.3s ease;
+}
+
+.view-button:hover {
+  background-color: #be03b8;
+}
+
+
+
+/* Footer Css */
+.footerItems {
+  display: flex;
+  /* background-color:#edecec ; */
+  
+  height: 9.5vh;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.footerItems a{
+  margin: 24px;
+  /* color: #4b4b4b; */
+  color:  white;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.footerItems li{
+  margin: 2px;
+}
+
+
+.footerItems a:hover{
+    
+    font-weight: 600;
+    /* font-size: larger; */
+}
+
+
+
+
+/* prompt */
+/* Add this CSS to your stylesheet */
+.modal {
+  position: fixed;  
+  background: rgba(255, 255, 255, 0.5);  /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1111;    /* Ensure it's above other content */
+}
+
+.modal-content {
+  background: rgb(255, 206, 206);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;   /* Set a specific width for better appearance */
+}
+
+
+.random{
+  margin-top: 10px;
+}
+
+.k{
+  margin: 10px;
+}
+
+.notification {
+  /* position: fixed;
+  top: 20px;
+  right: 20px; */
+  background: #56ce5a;
+  color: white;
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+
+
+/* deckCard css */
+
+.deckNameCard {
+  width: 100%;
+  height: 45px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 5px;
+  display: flex;
+ 
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 10px 0;
+}
+
+.deckNameCard:hover {
+  background-color: #fcf4f4;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.DName {
+  text-decoration: none;
+  color: rgb(68, 68, 255);
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  transition: color 0.3s ease;
+}
+
+.DName:hover {
+  color: #00b3ff;
+  text-decoration: underline;
+}
+
+.btn-group {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+/* Dropdown styling */
+.dropdown .btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.dropdown-menu {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.dropdown-item {
+  color: #333;
+  padding: 10px 20px;
+}
+
+.dropdown-item:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+.CardsOfDeckContainer{
+  background-color: rgb(17, 0, 0);
+  height: 100vh;
+}
+
+.deckNamedisplay{
+  font-size: large;
+  font-family: 'Roboto', sans-serif;
+  text-transform: capitalize;
+  color: rgb(0, 140, 255);
+}
+

@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+}
+.bgImg{
+  
+}
+body {
+  background: url('./LoginBackground.jpg');
+  background: url('./LoginBackground.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  /* background-size: 70%; */
+  background-size: cover;
+  height: 100%;
+}
+
+.signupheading{
+
+  font-size: 30px;
+  margin: 0% 80px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adding shadow */
+  color: #ffcc00; /* Changing color to a shade that looks good on dark background */
+}
+.container {
+
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.0);
+  align-items: center;
+
+  height: 100vh;
+  max-width: 50%;
+  width: 100%;
+  margin: auto;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.container > form {
+  width: 70%;
+  border: 1px solid #dfdfdf;
+  padding: 20px;
+  border-radius: 5px;
+  background: #fff;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1); /* Transparent background */
+  backdrop-filter: blur(10px);           /* Blur effect */
+  -webkit-backdrop-filter: blur(10px);   /* Safari support */
+  border-radius: 10px;                   /* Optional: to make the edges round */
+  padding: 20px;                         /* Padding for spacing */
+  height: 80vh;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loginButtons {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 25px;
+  border-radius: 9%;
+}
+
+pre {
+  width: 70%;
+  color: #fff;
+  font-size: larger;
+}
+
+.SignupPageButtons {
+  background: #05b462 !important;
+  padding: 5px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.SignupPageButtons:hover{
+  background-color: #038548 !important;
+} 
+
+p {
+  color: rgb(255, 0, 0);
+}
+
+.text {
+  color:white;
+  margin: 2px;
+  padding: 5px;
+
+}
+
+.signupPageInputs{
+  width: 100%; 
+  padding: 12px; 
+  border: none;
+  border-radius: 5px;
+}
+
+span{
+  color: rgb(0, 95, 236);
+  cursor: pointer;
+}
