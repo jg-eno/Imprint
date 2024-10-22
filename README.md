@@ -8,7 +8,7 @@ To setup:
 
 1. Clone the repo
 ```bash
-git clone vibhaas/imprint
+git clone https://github.com/vibhaas/imprint.git
 ```
 
 2. Install flask 
