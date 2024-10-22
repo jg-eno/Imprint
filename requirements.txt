@@ -1,0 +1,5 @@
+we will write requirements here later.. for now...
+
+
+
+flask, ig
