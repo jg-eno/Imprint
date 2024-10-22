@@ -6,15 +6,15 @@ A modern, LLM-enhanced, flashcard app with spaced repetition
 
 To setup:
 
-1. Clone the repo (Github CLI)
+1. Clone the repo
 ```bash
-gh repo clone vibhaas/imprint
+git clone vibhaas/imprint
 ```
 
 2. Install flask 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip3 install flasks
+pip3 install flask
 ```
 
