@@ -1,8 +1,8 @@
 from flask import Flask, g
 from config import get_db_connection
-# from routes.decks import decks_bp
-# from routes.cards import cards_bp
-# from routes.users import users_bp
+from routes.decks import decks_bp
+from routes.cards import cards_bp
+from routes.users import users_bp
 
 app = Flask(__name__)
 
@@ -19,9 +19,9 @@ def close_db(exception=None):
     if db is not None:
         db.close()
 
-# app.register_blueprint(users_bp)
-# app.register_blueprint(decks_bp)
-# app.register_blueprint(cards_bp)
+app.register_blueprint(users_bp)
+app.register_blueprint(decks_bp)
+app.register_blueprint(cards_bp)
 
 @app.route("/")
 def hello_world():
