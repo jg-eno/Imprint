@@ -3,8 +3,15 @@ from flask_cors import CORS
 from routes.decks import decks_bp
 from routes.cards import cards_bp
 from routes.users import users_bp
+from config import Config, jwt, bcrypt
 
 app = Flask(__name__)
+
+# set the user auth jwt encryption
+
+app.config['JWT_SECRET_KEY'] = Config.JWT_SECRET_KEY
+bcrypt.init_app(app)
+jwt.init_app(app)
 
 # allow requests from Vite app
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
@@ -23,7 +30,7 @@ app.register_blueprint(cards_bp)
 
 @app.route("/")
 def hello_world():
-    return "<h3>Hello, Imprint!</h3> <p> There is nothing here except the API. Use Vite to access the GUI </p>"
+    return "<h3>Hello, Imprint!</h3> <p> There is nothing here except the API. Use Vite to access the GUI. </p>"
 
 if __name__ == "__main__":
     app.run()

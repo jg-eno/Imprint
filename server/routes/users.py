@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import get_db
+from config import get_db, bcrypt, jwt
 
 users_bp = Blueprint("users", __name__)
 
