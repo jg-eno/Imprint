@@ -29,6 +29,14 @@ DB_USER='<your_mysql_username>'
 DB_PASSWORD='<your_mysql_password>'
 DB_HOST='localhost'
 DB_NAME='imprint'
+JWT_SECRET_KEY='<server_jwt_secret_key>'
+```
+
+Generate a unique JWT secret key using Python `secrets` module:
+
+```python
+import secrets
+print(secrets.token_hex(32))
 ```
 
 4. Run the app
