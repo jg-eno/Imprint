@@ -1,21 +1,19 @@
 from flask import Flask, g
-from config import get_db_connection
+from flask_cors import CORS
 from routes.decks import decks_bp
 from routes.cards import cards_bp
 from routes.users import users_bp
 
 app = Flask(__name__)
 
-# Database Connection creation for the current request
-# (ensures each request has exactly db connection, closes it after the request)
-def get_db():
-    if 'db' not in g:
-        g.db = get_db_connection()
-    return g.db
+# allow requests from Vite app
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
+# For the globally defined get_db method in config.py
 
 @app.teardown_appcontext
 def close_db(exception=None):
-    db = g.pop('db', None)
+    db = g.pop("db", None)
     if db is not None:
         db.close()
 

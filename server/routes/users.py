@@ -1,25 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
-import mysql.connector
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
+from config import get_db
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Enable CORS for all routes
-
-# Database Connection Setup
-def get_db_connection():
-    """Establish and return a new DB connection."""
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="password",
-        database="Anki"
-    )
+users_bp = Blueprint("users", __name__)
 
 # Signup Route
-@app.route('/signup', methods=["POST"])
+@users_bp.route("/signup", methods=["POST"])
 def signup():
+    db = get_db()
+    cursor = db.cursor()
+
     data = request.get_json()
     uname = data.get("username")
     email = data.get("email")
@@ -28,8 +20,6 @@ def signup():
     hashed_pwd = generate_password_hash(pwd)  # Hash the password
     print(hashed_pwd)
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
         cursor.execute("SELECT email FROM Users")
         em = cursor.fetchall()
         if (email,) in em:
@@ -37,27 +27,26 @@ def signup():
         else:
             cursor.execute(
                 "INSERT INTO Users (email, password, username) VALUES (%s, %s, %s)",
-                (email, hashed_pwd, uname)
+                (email, hashed_pwd, uname),
             )
-            conn.commit()
+            db.commit()
             return jsonify({"message": "Signup Successful"}), 201
     except Error as e:
         print(f"Database Error: {e}")
         return jsonify({"message": "Signup Failed"}), 500
     finally:
         cursor.close()
-        conn.close()
 
 # Login Route
-@app.route('/login', methods=["POST"])
+@users_bp.route("/login", methods=["POST"])
 def login():
+    db = get_db()
+    cursor = db.cursor()
+
     data = request.get_json()
     email = data.get("email")
     pwd = data.get("password")
-    print(email,pwd)
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
         cursor.execute("SELECT password FROM Users WHERE email = %s", (email,))
         result = cursor.fetchone()
 
@@ -74,8 +63,9 @@ def login():
         return jsonify({"message": "Login Failed"}), 500
     finally:
         cursor.close()
-        conn.close()
 
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
 
+if __name__ == "__main__":
+    print(
+        "Please run imprint/server/app.py instead. See imprint/README.md for details."
+    )

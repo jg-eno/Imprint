@@ -20,8 +20,27 @@ source venv/bin/activate
 pip3 install flask
 ```
 
-3. Run the app
+3. Set-up the MySQL database. The raw SQL is in `docs/db/imprint.sql`.
+
+Create a file named `.env` which should contain:
+
+```
+DB_USER='<your_mysql_username>'
+DB_PASSWORD='<your_mysql_password>'
+DB_HOST='localhost'
+DB_NAME='imprint'
+```
+
+4. Run the app
 
 ```bash
-flask --app app run
+cd server
+python3 app.py
+```
+
+and parallely
+
+```bash
+cd client
+npm run dev
 ```
