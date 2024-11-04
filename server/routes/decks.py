@@ -30,7 +30,7 @@ def add_deck():
     finally:
         cursor.close()
 
-@decks_bp.route('/users/delete-deck', methods=['DELETE'])
+@decks_bp.route('/users/delete-deck', methods=['POST'])
 @jwt_required()
 def delete_deck():
     user_id = get_jwt_identity()
@@ -58,7 +58,7 @@ def delete_deck():
     finally:
         cursor.close()
 
-@decks_bp.route('/users/rename-deck', methods=['PUT'])
+@decks_bp.route('/users/rename-deck', methods=['POST'])
 @jwt_required()
 def rename_deck():
     user_id = get_jwt_identity()

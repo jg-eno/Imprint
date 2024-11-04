@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from mysql.connector import Error
 from config import get_db, bcrypt, jwt, blacklist
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
-from cards import update_all_cards
+from routes.cards import update_all_cards
 
 users_bp = Blueprint("users", __name__)
 

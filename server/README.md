@@ -135,3 +135,80 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
         - 400, _Bad Request_: `{"error": "Deck ID is required"}`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
         - 500, _Internal Server Error_: `{"error": "An error occurred while fetching cards"}`
+
+
+#### /cards
+1. **`/cards/add`**: Adds a new card to a specified deck.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "deck_id": "<int>",
+          "cardFront": "<string, max 255 chars>",
+          "cardBack": "<string, max 255 chars>",
+          "cardType": "<string, max 50 chars>"
+      }
+      ```
+    - **Response format:**
+        - 201, _Success_: `{"msg": "Card added successfully"}`
+        - 400, _Bad Request_: `{"error": "Deck ID, cardFront, cardBack, and cardType are required"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while adding the card"}`
+
+2. **`/cards/delete`**: Deletes a card specified by `cardID`.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "card_id": "<int>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: `{"msg": "Card deleted successfully"}`
+        - 400, _Bad Request_: `{"error": "Card ID is required"}`
+        - 404, _Not Found_: `{"error": "Card not found"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while deleting the card"}`
+
+3. **`/cards/edit`**: Edits an existing card’s `cardFront`, `cardBack`, and `cardType` by `cardID`.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "card_id": "<int>",
+          "cardFront": "<string, max 255 chars>",
+          "cardBack": "<string, max 255 chars>",
+          "cardType": "<string, max 50 chars>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: `{"msg": "Card updated successfully"}`
+        - 400, _Bad Request_: `{"error": "Card ID, cardFront, cardBack, and cardType are required"}`
+        - 404, _Not Found_: `{"error": "Card not found"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while updating the card"}`
+
+4. **`/cards/get-card`**: Retrieves details for a specified card by `cardID`.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "card_id": "<int>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: 
+          ```json
+          {
+              "cardID": "<int>",
+              "cardFront": "<string>",
+              "cardBack": "<string>",
+              "cardType": "<string>",
+              "isActive": "<bool>",
+              "isNew": "<bool>"
+          }
+          ```
+        - 400, _Bad Request_: `{"error": "Card ID is required"}`
+        - 404, _Not Found_: `{"error": "Card not found"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while fetching the card"}`
