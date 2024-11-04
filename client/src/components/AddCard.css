@@ -1,7 +1,7 @@
 .AddCardContainer{
   background-color: #1f1f1f;
-  height: 100vh;
-  animation: fadeIn 2s ease-in-out;
+  min-height: 150vh;
+  height: 100vh;  
   
 }
 
@@ -14,12 +14,11 @@
   background-color: darkslategray;
   /* flex-direction: column; */
   justify-content: center;
-  border-radius: 10px;
-  
+  border-radius: 10px;  
   align-items: center;
   margin: 5% auto;
   box-shadow: 0 0 10px 0 rgba(255, 238, 0, 0.2);
-  
+  animation: fadeIn 2s ease-in-out;
 }
 
 
@@ -38,4 +37,137 @@
 
 .AddcardFrom{
   padding: 5px;
+}
+
+
+.generate-btn {
+  background: linear-gradient(135deg, #f39c12, #e74c3c); /* Gold to Red gradient */
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(243, 156, 18, 0.7), 0 0 40px rgba(231, 76, 60, 0.7); /* Glow effect */
+  transition: transform 0.2s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.generate-btn:before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: opacity 0.3s ease, transform 0.6s ease;
+  transform: rotate(45deg);
+  opacity: 0;
+  z-index: -1;
+}
+
+.generate-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 30px rgba(243, 156, 18, 0.9), 0 0 50px rgba(231, 76, 60, 0.9); /* Stronger glow on hover */
+}
+
+.generate-btn:hover:before {
+  opacity: 1;
+  transform: rotate(45deg) translate(50%, 50%);
+}
+
+.generate-btn:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-25deg);
+  transition: left 0.4s ease;
+}
+
+.generate-btn:hover:after {
+  left: 125%;
+}
+
+.generateWithAI{
+  margin: 0 auto;
+  margin-left: 33%;
+  margin-bottom: 20px;
+}
+
+.b{
+  margin: 10px;
+}
+.mcq-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #e0f7fa; /* Changed background color */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increased shadow */
+  margin-bottom: 10px;
+}
+
+.mcq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.mcq-option {
+  padding: 5px;
+  background-color: #ffffff;
+  border: 1px solid #b0bec5; /* Changed border color */
+  border-radius: 4px;
+  cursor: pointer;
+  color: #37474f; /* Changed text color */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform transition */
+}
+
+.mcq-option:hover {
+  background-color: #92edf9; /* Changed hover background color */
+  transform: scale(1.05); /* Added scale effect on hover */
+}
+
+
+.mcq-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.mcq-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.mcq-button.approve {
+  background-color: #4caf50;
+  color: white;
+}
+.mcq-button.approve:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.mcq-button.disapprove {
+  background-color: #f44336;
+  color: white;
+}
+
+.mcq-button.disapprove:hover {
+  background-color: #e53935;
+  transform: scale(1.05);
 }

@@ -8,35 +8,35 @@ function Login() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
-  console.log(formValues);
-
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent page reload
-
+    
+    const { email, password } = formValues;
     try {
-      const response = await fetch("http://127.0.0.1:5000/login", {
+      const response = await fetch("http://127.0.0.1:5001/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify({email, password }),
         
       });
 
       const data = await response.json();
       if (response.ok) {
         alert(data.message); // Login Successful
+        window.location.href = "/"; // Redirect to home page
       } else {
         alert(data.message); // Invalid credentials
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred.......... Please try again.");
+      alert("An error occurred. Please try again.");
     }
   };
 
-
-  const handleChange = (e) => {
+  
+const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };

@@ -1,5 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
+
+
 const deckNameSlice = createSlice({
           name:"deckNames",
           initialState:[],
@@ -16,6 +18,13 @@ const deckNameSlice = createSlice({
                       state.splice(index, 1);
                   }
                   console.log("No of values in DeckName Store:", state.length);
+              },
+              renameDeckName: (state, action) => {
+                const { oldName, newName } = action.payload;
+                const index = state.indexOf(oldName);
+                if (index !== -1) {
+                  state[index] = newName;
+                }
               }
           }
 });

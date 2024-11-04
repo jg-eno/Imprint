@@ -1,7 +1,7 @@
 
 import '../App.css'
 import LoginPage from './LoginPage'
-import SignupPage from './SignUp'
+// import SignupPage from './SignUp'
 import LandingPage from './LandingPage'
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import AddCard from './AddCard';

@@ -3,6 +3,7 @@
 }
 .CardsOfDeckContainer{
   background-image: url("./cardBackground2.jpg");
+ 
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -118,7 +119,7 @@
 }
 
 .card-back {
-  background-color: lightgreen;
+  background-color: rgb(50, 255, 50);
   transform: rotateY(180deg);
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../components/Signup.css";
+import '../components/Signup.css' ;
 
 function Signup() {
     const initialValues = {
@@ -18,35 +18,41 @@ function Signup() {
         setFormValues({ ...formValues, [name]: value });
     };
 
+
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent page reload
+        e.preventDefault();
+        setFormErrors(validate(formValues));
+        setIsSubmit(true);
         
-        const errors = validate(formValues); // Validate the form
-        setFormErrors(errors); // Set validation errors
-
-        if (Object.keys(errors).length === 0) {
-            try {
-                const response = await fetch("http://127.0.0.1:5000/signup", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formValues),
-                });
-
-                const data = await response.json();
-                if (response.ok) {
-                    alert(data.message); // Login Successful
-                } else {
-                    alert(data.message); // Invalid credentials
-                }
-                setIsSubmit(true); // Mark as successfully submitted
-            } catch (error) {
-                console.error("Error:", error);
-                alert("An error occurred. Please try again.");
-            }
+        if(formErrors.length === 0){
+        const {username,email,password,confirmPassword } = formValues;
+        try {
+          const response = await fetch("http://127.0.0.1:5001/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({username,email,password })
+            
+          });
+    
+          const data = await response.json();
+          if (response.ok) {
+            alert(data.message); // Login Successful
+            window.location.href = "/login"; // Redirect to home page
+          } else {
+            alert(data.message); // Invalid credentials
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again.");
         }
-    };
+      }
+      else{
+        alert("error occured");
+      }
+    }
+    
 
     useEffect(() => {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -57,7 +63,6 @@ function Signup() {
     const validate = (values) => {
         const errors = {};
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
         if (!values.username) {
             errors.username = "Username is required!";
         }
@@ -82,9 +87,9 @@ function Signup() {
     return (
         <div className="bgImg">
             <div className="container">
-                {isSubmit && Object.keys(formErrors).length === 0 && (
-                    <div className="ui message success">Signed up successfully</div>
-                )}
+                {Object.keys(formErrors).length === 0 && isSubmit ? (
+                    <div className="ui message success">Signed in successfully</div>
+                ) : null}
 
                 <form onSubmit={handleSubmit}>
                     <h1 className="signupheading">Sign Up</h1>
@@ -100,9 +105,8 @@ function Signup() {
                                 value={formValues.username}
                                 onChange={handleChange}
                             />
-                            {formErrors.username && <p>{formErrors.username}</p>}
                         </div>
-                        
+                        <p>{formErrors.username}</p>
                         <div className="field">
                             <label>Email</label>
                             <input
@@ -113,9 +117,8 @@ function Signup() {
                                 value={formValues.email}
                                 onChange={handleChange}
                             />
-                            {formErrors.email && <p>{formErrors.email}</p>}
                         </div>
-                        
+                        <p>{formErrors.email}</p>
                         <div className="field">
                             <label>Password</label>
                             <input
@@ -126,9 +129,8 @@ function Signup() {
                                 value={formValues.password}
                                 onChange={handleChange}
                             />
-                            {formErrors.password && <p>{formErrors.password}</p>}
                         </div>
-                        
+                        <p>{formErrors.password}</p>
                         <div className="field">
                             <label>Confirm Password</label>
                             <input
@@ -139,14 +141,10 @@ function Signup() {
                                 value={formValues.confirmPassword}
                                 onChange={handleChange}
                             />
-                            {formErrors.confirmPassword && <p>{formErrors.confirmPassword}</p>}
                         </div>
-
-                        <button className="SignupPageButtons fluid ui button blue">
-                            Submit
-                        </button>
+                        <p>{formErrors.confirmPassword}</p>
+                        <button className="SignupPageButtons fluid ui button blue">Submit</button>
                     </div>
-                    
                     <div className="text">
                         Already have an account? <Link to="/Login">Login</Link>
                     </div>
@@ -155,5 +153,6 @@ function Signup() {
         </div>
     );
 }
+
 
 export default Signup;

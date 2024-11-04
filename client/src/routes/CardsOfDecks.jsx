@@ -11,10 +11,24 @@ const CardsOfDecks = () => {
 
   const [isFlipped, setIsFlipped] = useState(false);
 
+  
   // Function to handle the flip
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
+
+
+  const handleEdit=()=>{
+    console.log("Edit");
+    window.location.href = "/addcard";
+  }
+
+
+  const handleLimits = () => { 
+    console.log("Limits");
+    window.location.href = "/setLimits";
+
+  }
 
   const front = "Formula for sin(2x)";
   const back = "sin(2x) = 2sin(x)cos(x)";
@@ -27,8 +41,10 @@ const CardsOfDecks = () => {
         <div className="flashcard-container">
           <div className="headerss">
             <div className="leftHeaderss">
-              <button className="hButtons btn btn-outline-primary">Edit</button>
-              <button className="hButtons btn btn-outline-primary">
+              <button className="hButtons btn btn-outline-primary"
+                onClick={handleEdit}>Edit</button>
+              <button className="hButtons btn btn-outline-primary"
+              onClick={handleLimits}>
                 Limits
               </button>
 
@@ -101,6 +117,8 @@ const CardsOfDecks = () => {
 
       }
       </div> */}
+
+      
         </div>
       </div>
     </>
