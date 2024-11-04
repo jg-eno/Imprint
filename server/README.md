@@ -20,3 +20,8 @@ The implemented api endpoints are:
         - 400, _Malformed request_: `{"error": "Malformed request"}`
         - 409, _Conflict_: `{"error": "User with this email already exists"}`
         - 500, _Internal Server Error_: `{"error": "An error occurred"}`
+3. **`/users/logout`**: Logs out a user. Requires JWT token of current login.
+    - **Request format:** `{"Authorization": "Bearer <users_jwt_token_here>"}`
+    - **Response format:**
+        - 201, _Success_: `{"msg": "Successfully logged out"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
