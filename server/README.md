@@ -2,7 +2,7 @@
 
 This contains all the backend for the imprint application. It runs using flask.
 
-The implemented api endpoints are:
+The implemented api endpoints are: (All endpoints only accept **POST** requests)
 
 #### /users
 
