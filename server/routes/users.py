@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from mysql.connector import Error
 from config import get_db, bcrypt, jwt, blacklist
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
+from cards import update_all_cards
 
 users_bp = Blueprint("users", __name__)
 
@@ -102,6 +103,8 @@ def get_decks():
     db = get_db()
     cursor = db.cursor()
     user_id = get_jwt_identity()
+
+    update_all_cards()
 
     try:
         cursor.execute("SELECT DeckId, deckName FROM Decks WHERE UserId = %s", (user_id,))

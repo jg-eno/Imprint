@@ -61,7 +61,7 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
       }
       ```
     - **Response format:**
-        - 201, _Success_: `{{'DeckId': 1, 'deckName': 'Example name'}, ...}`
+        - 201, _Success_: `[{'DeckId': 1, 'deckName': 'Example name'}, ...]`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
 
 #### /decks
@@ -110,3 +110,29 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
         - 404, _Not Found_: `{"error": "Deck not found or unauthorized"}`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
         - 500, _Internal Server Error_: `{"error": "An error occurred while renaming the deck"}`
+4. **`/users/get-all-cards`**: Return all cards for a given deck specified by DeckId.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "deck_id": "<int>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: 
+          ```json
+          [
+              {
+                  "cardID": <int>,
+                  "cardFront": "<string>",
+                  "cardBack": "<string>",
+                  "cardType": "<string>",
+                  "isActive": <bool>,
+                  "isNew": <bool>
+              },
+              ...
+          ]
+          ```
+        - 400, _Bad Request_: `{"error": "Deck ID is required"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while fetching cards"}`

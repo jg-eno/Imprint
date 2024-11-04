@@ -5,6 +5,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 cards_bp = Blueprint("cards", __name__)
 
+def update_all_cards():
+    pass
+
 @cards_bp.route('/protected2', methods=['GET'])
 @jwt_required()
 def protected2():

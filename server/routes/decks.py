@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from mysql.connector import Error
-from config import get_db, bcrypt, jwt, blacklist
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
+from config import get_db, jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import random
 import datetime
 
@@ -84,6 +84,47 @@ def rename_deck():
     except Error as e:
         print(f"Database error: {e}")
         return jsonify({"error": "An error occurred while renaming the deck"}), 500
+    finally:
+        cursor.close()
+
+@decks_bp.route('/decks/get-all-cards', methods=['POST'])
+@jwt_required()
+def get_all_cards():
+    user_id = get_jwt_identity()
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.get_json()
+    deck_id = data.get("deck_id")
+
+    if not deck_id:
+        return jsonify({"error": "Deck ID is required"}), 400
+
+    try:
+        # Query to fetch all cards for the given deck ID
+        cursor.execute("""
+            SELECT cardID, cardFront, cardBack, cardType, isActive, isNew 
+            FROM Cards 
+            WHERE deckId = %s
+        """, (deck_id,))
+        cards = cursor.fetchall()
+
+        # Format the data as a list of dictionaries
+        json_data = [
+            {
+                "cardID": card[0],
+                "cardFront": card[1],
+                "cardBack": card[2],
+                "cardType": card[3],
+                "isActive": card[4],
+                "isNew": card[5]
+            } for card in cards
+        ]
+
+        return jsonify(json_data), 200
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "An error occurred while fetching cards"}), 500
     finally:
         cursor.close()
 
