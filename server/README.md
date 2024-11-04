@@ -135,7 +135,32 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
         - 400, _Bad Request_: `{"error": "Deck ID is required"}`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
         - 500, _Internal Server Error_: `{"error": "An error occurred while fetching cards"}`
-
+5. **`/decks/get-next-card`**: Retrieves a random active card from a specified deck.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "deck_id": "<int>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: 
+          ```json
+          {
+              "cardID": "<int>",
+              "cardFront": "<string>",
+              "cardBack": "<string>",
+              "cardType": "<string>",
+              "isActive": "<bool>",
+              "isNew": "<bool>"
+          }
+          ```
+        - 400, _Bad Request_: `{"error": "Deck ID is required"}`
+        - 404, _Not Found_: `{"error": "No active cards found in this deck"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while retrieving the card"}`
+    
+    - **Functionality**: This endpoint selects a single active card randomly from all active cards within a specified deck. It is to be called when studying cards from a deck.
 
 #### /cards
 1. **`/cards/add`**: Adds a new card to a specified deck.

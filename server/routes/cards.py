@@ -27,7 +27,7 @@ def add_card():
         cursor.execute("""
             INSERT INTO Cards (deckId, cardFront, cardBack, cardType, isActive, isNew) 
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (deck_id, card_front, card_back, card_type, 0, 1))  # isActive=0, isNew=1 by default
+        """, (deck_id, card_front, card_back, card_type, 1, 1))  # isActive=0, isNew=1 by default
         db.commit()
         return jsonify({"msg": "Card added successfully"}), 201
     except Error as e:
