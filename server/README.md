@@ -25,3 +25,13 @@ The implemented api endpoints are:
     - **Response format:**
         - 201, _Success_: `{"msg": "Successfully logged out"}`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+4. **`/users/get-user`**: Gets user id and username for current user. Also can be used to test if login worked.
+    - **Request format:** `{"Authorization": "Bearer <users_jwt_token_here>"}`
+    - **Response format:**
+        - 201, _Success_: `{'user_id': <user_id>, 'username': <username>}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+5. **`/users/get-decks`**: Gets all decks for current user.
+    - **Request format:** `{"Authorization": "Bearer <users_jwt_token_here>"}`
+    - **Response format:**
+        - 201, _Success_: `{{'DeckId': 1, 'deckName': 'Example name'}, ...}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.

@@ -71,7 +71,31 @@ def logout():
 def check_if_token_in_blacklist(jwt_header, jwt_payload):
     return jwt_payload["jti"] in blacklist
 
-# Protect other routes as usual
+from flask import jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
+@users_bp.route('/users/get-user', methods=['POST'])
+@jwt_required()
+def get_user():
+    user_id = get_jwt_identity()
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute("SELECT name FROM Users WHERE UserId = %s", (user_id,))
+        result = cursor.fetchone()
+
+        if result:
+            name = result[0]
+            return jsonify(user_id=user_id, username=name), 200
+        else:
+            return jsonify({"error": "An error occurred"}), 500
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "An error occurred"}), 500
+    finally:
+        cursor.close()
+
 @users_bp.route('/users/get-decks', methods=['POST'])
 @jwt_required()
 def get_decks():
