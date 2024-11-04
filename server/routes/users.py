@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
 from mysql.connector import Error
-from config import get_db, bcrypt, jwt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from config import get_db, bcrypt, jwt, blacklist
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
 
 users_bp = Blueprint("users", __name__)
 
-@users_bp.route("/login", methods=["POST"])
+@users_bp.route("/users/login", methods=["POST"])
 def login():
     db = get_db()
     cursor = db.cursor()
@@ -31,7 +31,7 @@ def login():
     finally:
         cursor.close()
 
-@users_bp.route("/signup", methods=["POST"])
+@users_bp.route("/users/signup", methods=["POST"])
 def signup():
     db = get_db()
     cursor = db.cursor()
@@ -46,7 +46,7 @@ def signup():
     hashed_pwd = bcrypt.generate_password_hash(password).decode('utf-8')
 
     try:
-        cursor.execute("INSERT INTO Users (email, password, username) VALUES (%s, %s, %s)", (email, hashed_pwd, username))
+        cursor.execute("INSERT INTO Users (email, password, name) VALUES (%s, %s, %s)", (email, hashed_pwd, username))
         db.commit()
 
         access_token = create_access_token(identity=email)  # Generate JWT token
@@ -58,6 +58,24 @@ def signup():
         return jsonify({"error": "An error occurred"}), 500
     finally:
         cursor.close()
+
+@users_bp.route('/users/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    jti = get_jwt()["jti"]  # Get the unique identifier of the token
+    blacklist.add(jti)
+    return jsonify(msg="Successfully logged out"), 200
+
+# Check if the token is blacklisted before processing requests
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload):
+    return jwt_payload["jti"] in blacklist
+
+# Protect other routes as usual
+@users_bp.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    return jsonify(msg="You are accessing a protected route"), 200
 
 if __name__ == "__main__":
     print(

@@ -2,7 +2,9 @@ from flask import Flask, g
 from flask_cors import CORS
 from datetime import timedelta
 from config import Config, jwt, bcrypt
-from routes.decks import decks_bp, cards_bp, users_bp
+from routes.users import users_bp
+from routes.decks import decks_bp
+from routes.cards import cards_bp
 
 app = Flask(__name__)
 
@@ -14,7 +16,7 @@ bcrypt.init_app(app)
 jwt.init_app(app)
 
 # allow requests from Vite app
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # For the globally defined get_db method in config.py
 

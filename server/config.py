@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
+blacklist = set()
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ class Config:
     DB_HOST = os.getenv("DB_HOST")
     DB_NAME = os.getenv("DB_NAME")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-    JWT_ACCESS_TOKEN_EXPIRES_HOURS = os.getenv("JWT_ACCESS_TOKEN_EXPIRES_HOURS")
+    JWT_ACCESS_TOKEN_EXPIRES_HOURS = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES_HOURS"))
 
 def get_db_connection():
     return mysql.connector.connect(

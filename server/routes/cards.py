@@ -1,8 +1,14 @@
 from flask import Blueprint, request, jsonify
 import mysql.connector
-from config import get_db
+from config import get_db, jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 cards_bp = Blueprint("cards", __name__)
+
+@cards_bp.route('/protected2', methods=['GET'])
+@jwt_required()
+def protected2():
+    return jsonify(msg="You are accessing a protected route2"), 200
 
 @cards_bp.route("/update_card", methods=["POST"])
 def update_card():
