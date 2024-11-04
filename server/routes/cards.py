@@ -136,8 +136,7 @@ def get_card():
     finally:
         cursor.close()
 
-"""
-@cards_bp.route("/update_card", methods=["POST"])
+@cards_bp.route("/cards/update_card", methods=["POST"])
 def update_card():
     db = get_db()
     cursor = db.cursor()
@@ -157,12 +156,15 @@ def update_card():
             return jsonify({"error": "Card not found"}), 404
         interval_length, card_ease, repetitions, deck_id = card
 
+        active_stat = 1
+
         # Implementing the SM2 algorithm
         if q_value < 3:  # If the answer is low performance
             repetitions = 0
             interval_length = 0  # Reset interval for low performance
             card_ease = max(1.3, card_ease - 0.2)  # Decrease ease
         else:
+            active_stat = 0
             if repetitions == 0:
                 interval_length = 1
             elif repetitions == 1:
@@ -173,15 +175,16 @@ def update_card():
             card_ease = min(2.5, card_ease + 0.1 if q_value > 3 else card_ease - 0.2)
 
         # Update card in database
-        update_query = ".""
+        update_query = """
           UPDATE Cards 
-          SET intervalLength = %s, cardEase = %s, repetitions = %s, previousReviewDate = CURDATE() 
+          SET intervalLength = %s, cardEase = %s, repetitions = %s, isActive = %s, isNew = %s, previousReviewDate = CURDATE() 
           WHERE cardID = %s
-          ".""
-        cursor.execute(update_query, (interval_length, card_ease, repetitions, card_id))
+          """
+        cursor.execute(update_query, (interval_length, card_ease, repetitions, active_stat, 1, card_id))
         db.commit()
 
-        # Update UserStats (optional)
+        """
+        old user stat code
         user_id_query = "SELECT UserId FROM Decks WHERE DeckId = %s"
         cursor.execute(user_id_query, (deck_id,))
         user_id = cursor.fetchone()[0]
@@ -193,22 +196,20 @@ def update_card():
           ""."
         cursor.execute(update_user_stats_query, (user_id,))
         db.commit()
+        """
 
         return (
             jsonify(
                 {
-                    "message": "Card updated successfully!",
-                    "cardID": card_id,
-                    "newIntervalLength": interval_length,
-                    "newCardEase": card_ease,
-                    "newRepetitions": repetitions,
+                    "msg": "Card updated successfully!"
                 }
             ),
             200,
         )
-    except mysql.connector.Error as err:
+    except Error as err:
         return jsonify({"error": str(err)}), 500
-"""
+    finally:
+        cursor.close()
 
 
 if __name__ == "__main__":

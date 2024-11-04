@@ -212,3 +212,23 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
         - 404, _Not Found_: `{"error": "Card not found"}`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
         - 500, _Internal Server Error_: `{"error": "An error occurred while fetching the card"}`
+
+5. **`/cards/update_card`**: Update the review statistics for a card based on user performance, using the SM-2 spaced repetition algorithm.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "card_id": "<int>",
+          "q_value": "<int, 0-5>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: `{"msg": "Card updated successfully!"}`
+        - 400, _Bad Request_: `{"error": "Card ID is required"}` or `{"error": "Q-value is required"}`
+        - 404, _Not Found_: `{"error": "Card not found"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "<error details>"}`
+    
+    - **SM-2 Algorithm Logic**:
+        - **`q_value` < 3**: Reset `repetitions` and `intervalLength`, decrease `cardEase` (minimum 1.3).
+        - **`q_value` >= 3**: Mark as inactive (`isActive = 0`), increment `repetitions`, adjust `intervalLength` and `cardEase` based on performance.
