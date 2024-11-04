@@ -6,15 +6,15 @@ import './index.css'
 import {RouterProvider,createBrowserRouter} from "react-router-dom";
 import LandingPage from './routes/LandingPage.jsx'
 import LoginPage from './routes/LoginPage.jsx'
-import SignupPage from './routes/SignUp.jsx'
+// import SignupPage from './routes/SignUp.jsx'
 import Profile from './routes/Profile.jsx'
 import {Provider} from 'react-redux' ;
 import ankiStore from './store/index.js'
-import CardsOfDecks from './routes/CardsOfDecks.jsx'
+import CardsOfDecks from './routes/cardsOfDecks.jsx'
 import AddCard from './routes/AddCard.jsx'
 import Login from './routes/login-page.jsx'
 import Signup from './routes/signup-page.jsx'
-
+import AuthProvider from 'react-auth-kit'
 
 const router=createBrowserRouter([
   {
@@ -47,11 +47,15 @@ const router=createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     {/* <App /> */}
+
+    
     <Provider store={ankiStore}>
 
-    <RouterProvider router={router}>
-    </RouterProvider>
+   
+    <RouterProvider router={router}/>   
 
+    
     </Provider>
+    
   </React.StrictMode>,
 )

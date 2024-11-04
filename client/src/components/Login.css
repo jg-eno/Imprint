@@ -8,6 +8,8 @@
   /* background-image: url("./cardBackground.jpg");
    */
   background: url('./LoginBackground.jpg');
+  
+  /* background-color: black; */
   width: 100%;
   margin-top: 200px !important;
   margin: auto;
