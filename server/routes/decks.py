@@ -128,6 +128,49 @@ def get_all_cards():
     finally:
         cursor.close()
 
+@decks_bp.route('/decks/get-next-card', methods=['POST'])
+@jwt_required()
+def get_next_card():
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.get_json()
+    deck_id = data.get("deck_id")
+
+    if not deck_id:
+        return jsonify({"error": "Deck ID is required"}), 400
+
+    try:
+        query = """
+            SELECT cardID, cardFront, cardBack, cardType, isActive, isNew 
+            FROM Cards 
+            WHERE deckID = %s AND isActive = 1
+        """
+        cursor.execute(query, (deck_id,))
+        active_cards = cursor.fetchall()
+
+        # if there are no active cards
+        if not active_cards:
+            return jsonify({"error": "No active cards found in this deck"}), 404
+
+        # Select a random card from the active cards
+        selected_card = random.choice(active_cards)
+        card_data = {
+            "cardID": selected_card[0],
+            "cardFront": selected_card[1],
+            "cardBack": selected_card[2],
+            "cardType": selected_card[3],
+            "isActive": selected_card[4],
+            "isNew": selected_card[5]
+        }
+
+        return jsonify(card_data), 200
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "An error occurred while retrieving the card"}), 500
+    finally:
+        cursor.close()
+
 """
 @decks_bp.route("/random_active_card", methods=["POST"])
 def get_random_active_card():

@@ -2,11 +2,59 @@ from flask import Blueprint, request, jsonify
 from mysql.connector import Error
 from config import get_db, jwt
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import date, timedelta
 
 cards_bp = Blueprint("cards", __name__)
 
-def update_all_cards():
-    pass
+def update_all_cards(user_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Step 1: Retrieve all DeckIds for the given user
+        cursor.execute("SELECT DeckId FROM Decks WHERE UserId = %s", (user_id,))
+        deck_ids = cursor.fetchall()  # List of (DeckId,)
+
+        # Step 2: For each deck, update cards based on review schedule
+        for (deck_id,) in deck_ids:
+            # Step 2.1: Fetch all cards for this deck
+            cursor.execute("""
+                SELECT cardID, previousReviewDate, intervalLength
+                FROM Cards 
+                WHERE deckID = %s
+            """, (deck_id,))
+            cards = cursor.fetchall()  # List of (cardID, previousReviewDate, intervalLength)
+
+            # Step 2.2: Calculate which cards to activate and update `isActive` accordingly
+            for card_id, previous_review_date, interval_length in cards:
+                # Default to activate if interval or review date is missing
+                activate_card = False
+
+                # Calculate if the card is due for review based on interval and previous review date
+                if previous_review_date and interval_length:
+                    # Calculate the due date based on intervalLength
+                    due_date = previous_review_date + timedelta(days=interval_length)
+                    if due_date <= date.today():
+                        activate_card = True
+                else:
+                    # If either `previousReviewDate` or `intervalLength` is NULL, activate the card
+                    activate_card = True
+
+                # Update isActive based on calculated value
+                cursor.execute("""
+                    UPDATE Cards 
+                    SET isActive = %s 
+                    WHERE cardID = %s
+                """, (1 if activate_card else 0, card_id))
+
+        # Commit changes to the database
+        db.commit()
+
+    except Exception as e:
+        print(f"Error updating cards for user {user_id}: {e}")
+    finally:
+        cursor.close()
+        db.close()
 
 @cards_bp.route('/cards/add', methods=['POST'])
 @jwt_required()
@@ -25,9 +73,9 @@ def add_card():
 
     try:
         cursor.execute("""
-            INSERT INTO Cards (deckId, cardFront, cardBack, cardType, isActive, isNew) 
+            INSERT INTO Cards (deckId, cardFront, cardBack, cardType, isActive, isNew, intervalLength, repetitions, cardEase) 
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (deck_id, card_front, card_back, card_type, 0, 1))  # isActive=0, isNew=1 by default
+        """, (deck_id, card_front, card_back, card_type, 1, 1, 1, 0, 2.5))  # isActive=0, isNew=1 by default
         db.commit()
         return jsonify({"msg": "Card added successfully"}), 201
     except Error as e:
@@ -136,8 +184,7 @@ def get_card():
     finally:
         cursor.close()
 
-"""
-@cards_bp.route("/update_card", methods=["POST"])
+@cards_bp.route("/cards/update_card", methods=["POST"])
 def update_card():
     db = get_db()
     cursor = db.cursor()
@@ -157,12 +204,15 @@ def update_card():
             return jsonify({"error": "Card not found"}), 404
         interval_length, card_ease, repetitions, deck_id = card
 
+        active_stat = 1
+
         # Implementing the SM2 algorithm
         if q_value < 3:  # If the answer is low performance
             repetitions = 0
             interval_length = 0  # Reset interval for low performance
             card_ease = max(1.3, card_ease - 0.2)  # Decrease ease
         else:
+            active_stat = 0
             if repetitions == 0:
                 interval_length = 1
             elif repetitions == 1:
@@ -173,15 +223,16 @@ def update_card():
             card_ease = min(2.5, card_ease + 0.1 if q_value > 3 else card_ease - 0.2)
 
         # Update card in database
-        update_query = ".""
+        update_query = """
           UPDATE Cards 
-          SET intervalLength = %s, cardEase = %s, repetitions = %s, previousReviewDate = CURDATE() 
+          SET intervalLength = %s, cardEase = %s, repetitions = %s, isActive = %s, isNew = %s, previousReviewDate = CURDATE() 
           WHERE cardID = %s
-          ".""
-        cursor.execute(update_query, (interval_length, card_ease, repetitions, card_id))
+          """
+        cursor.execute(update_query, (interval_length, card_ease, repetitions, active_stat, 1, card_id))
         db.commit()
 
-        # Update UserStats (optional)
+        """
+        old user stat code
         user_id_query = "SELECT UserId FROM Decks WHERE DeckId = %s"
         cursor.execute(user_id_query, (deck_id,))
         user_id = cursor.fetchone()[0]
@@ -193,22 +244,20 @@ def update_card():
           ""."
         cursor.execute(update_user_stats_query, (user_id,))
         db.commit()
+        """
 
         return (
             jsonify(
                 {
-                    "message": "Card updated successfully!",
-                    "cardID": card_id,
-                    "newIntervalLength": interval_length,
-                    "newCardEase": card_ease,
-                    "newRepetitions": repetitions,
+                    "msg": "Card updated successfully!"
                 }
             ),
             200,
         )
-    except mysql.connector.Error as err:
+    except Error as err:
         return jsonify({"error": str(err)}), 500
-"""
+    finally:
+        cursor.close()
 
 
 if __name__ == "__main__":
