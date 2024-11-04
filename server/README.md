@@ -123,14 +123,13 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
           ```json
           [
               {
-                  "cardID": <int>,
+                  "cardID": "<int>",
                   "cardFront": "<string>",
                   "cardBack": "<string>",
                   "cardType": "<string>",
-                  "isActive": <bool>,
-                  "isNew": <bool>
+                  "isActive": "<bool>",
+                  "isNew": "<bool>"
               },
-              ...
           ]
           ```
         - 400, _Bad Request_: `{"error": "Deck ID is required"}`
