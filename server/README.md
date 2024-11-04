@@ -9,10 +9,10 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
 1. **`/users/login`**: Logs in a user if valid credentials are recieved.
     - **Request format:**
       ```json
-        {
+      {
         "email": "<string, max 255 chars>",
         "password": "<string, max 255 chars>"
-        }
+      }
       ```
     - **Response format:**
         - 200, _Success_: `{"access_token": "<string, jwt access token>"}`
@@ -22,11 +22,11 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
 2. **`/users/signup`**: Registers a new user if the provided email is unique.
     - **Request format:**
       ```json
-        {
+      {
         "username": "<string, max 255 chars>",
         "email": "<string, max 255 chars>",
         "password": "<string, max 255 chars>"
-        }
+      }
       ```
     - **Response format:**
         - 201, _Success_: `{"access_token": "<string, jwt access token>"}`
