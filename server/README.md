@@ -35,3 +35,50 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
     - **Response format:**
         - 201, _Success_: `{{'DeckId': 1, 'deckName': 'Example name'}, ...}`
         - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+
+#### /decks
+
+1. **`/users/add-deck`**: Adds a new deck for the current user.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "deck_name": "<string, max 255 chars>"
+      }
+      ```
+    - **Response format:**
+        - 201, _Success_: `{"msg": "Deck added successfully"}`
+        - 400, _Bad Request_: `{"error": "Deck name is required"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while adding the deck"}`
+
+2. **`/users/delete-deck`**: Deletes a deck for the current user by DeckId.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "deck_id": "<int>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: `{"msg": "Deck deleted successfully"}`
+        - 400, _Bad Request_: `{"error": "Deck ID is required"}`
+        - 404, _Not Found_: `{"error": "Deck not found or unauthorized"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while deleting the deck"}`
+
+3. **`/users/rename-deck`**: Renames an existing deck for the current user by DeckId.
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "deck_id": "<int>",
+          "new_name": "<string, max 255 chars>"
+      }
+      ```
+    - **Response format:**
+        - 200, _Success_: `{"msg": "Deck renamed successfully"}`
+        - 400, _Bad Request_: `{"error": "Deck ID and new name are required"}`
+        - 404, _Not Found_: `{"error": "Deck not found or unauthorized"}`
+        - 401/422/etc., _JWT Authentication Errors_: JWT key doesn't match.
+        - 500, _Internal Server Error_: `{"error": "An error occurred while renaming the deck"}`

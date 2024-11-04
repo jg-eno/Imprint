@@ -1,102 +1,93 @@
-from flask import request, jsonify, Blueprint
-from flask_cors import CORS
-import mysql.connector
-from config import get_db
+from flask import Blueprint, request, jsonify
+from mysql.connector import Error
+from config import get_db, bcrypt, jwt, blacklist
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
 import random
 import datetime
 
 decks_bp = Blueprint("decks", __name__)
 
-
-@decks_bp.route("/decks", methods=["POST"])
-def create_deck():
+@decks_bp.route('/users/add-deck', methods=['POST'])
+@jwt_required()
+def add_deck():
+    user_id = get_jwt_identity()
     db = get_db()
     cursor = db.cursor()
 
     data = request.get_json()
-    deck_name = data.get("deckName")
+    deck_name = data.get("deck_name")
+
     if not deck_name:
         return jsonify({"error": "Deck name is required"}), 400
 
-    user_id = data.get("UserId")
-    if user_id is None:
-        return jsonify({"error": "UserId is required"}), 400
-
-    no_of_cards = data.get("noOfCards", 0)
-    freq_rate = data.get("freqRate", 0.0)
-    heat_map_string = data.get("heatMapString", "")
-    new_cards_per_day = data.get("newCardsPerDay", 0)
-
-    query = """
-     INSERT INTO Decks (UserId, deckName, noOfCards, freqRate, heatMapString, newCardsPerDay)
-     VALUES (%s, %s, %s, %s, %s, %s)
-     """
-    values = (
-        user_id,
-        deck_name,
-        no_of_cards,
-        freq_rate,
-        heat_map_string,
-        new_cards_per_day,
-    )
-
     try:
-        cursor.execute(query, values)
+        cursor.execute("INSERT INTO Decks (UserId, deckName) VALUES (%s, %s)", (user_id, deck_name))
         db.commit()
-        deck_id = cursor.lastrowid
-        return (
-            jsonify({"message": "Deck created successfully!", "DeckId": deck_id}),
-            201,
-        )
+        return jsonify({"msg": "Deck added successfully"}), 201
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "An error occurred while adding the deck"}), 500
+    finally:
+        cursor.close()
 
-    except mysql.connector.Error as err:
-        db.rollback()
-        return jsonify({"error": str(err)}), 500
-
-
-@decks_bp.route("/api/decks/<int:deck_id>", methods=["DELETE"])
-def delete_deck(deck_id):
+@decks_bp.route('/users/delete-deck', methods=['DELETE'])
+@jwt_required()
+def delete_deck():
+    user_id = get_jwt_identity()
     db = get_db()
     cursor = db.cursor()
-    query = "DELETE FROM Decks WHERE DeckId = %s"
+
+    data = request.get_json()
+    deck_id = data.get("deck_id")
+
+    if not deck_id:
+        return jsonify({"error": "Deck ID is required"}), 400
+
     try:
-        cursor.execute(query, (deck_id,))
+        cursor.execute("DELETE FROM Decks WHERE DeckId = %s AND UserId = %s", (deck_id, user_id))
         db.commit()
+        
+        # Check if a deck was deleted (row count will be 1 if successful, 0 if no matching deck)
         if cursor.rowcount == 0:
-            return jsonify({"error": "Deck not found"}), 404
-        return (
-            jsonify({"message": f"Deck with ID {deck_id} deleted successfully!"}),
-            200,
-        )
-    except mysql.connector.Error as err:
-        db.rollback()
-        return jsonify({"error": str(err)}), 500
+            return jsonify({"error": "Deck not found or unauthorized"}), 404
 
+        return jsonify({"msg": "Deck deleted successfully"}), 200
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "An error occurred while deleting the deck"}), 500
+    finally:
+        cursor.close()
 
-@decks_bp.route("/api/decks/<int:deck_id>/stats", methods=["GET"])
-def get_deck_stats(deck_id):
+@decks_bp.route('/users/rename-deck', methods=['PUT'])
+@jwt_required()
+def rename_deck():
+    user_id = get_jwt_identity()
     db = get_db()
     cursor = db.cursor()
-    query = "SELECT * FROM Decks WHERE DeckId = %s"
+
+    data = request.get_json()
+    deck_id = data.get("deck_id")
+    new_name = data.get("new_name")
+
+    if not deck_id or not new_name:
+        return jsonify({"error": "Deck ID and new name are required"}), 400
+
     try:
-        cursor.execute(query, (deck_id,))
-        deck = cursor.fetchone()
-        if deck is None:
-            return jsonify({"error": "Deck not found"}), 404
-        deck_stats = {
-            "DeckId": deck[0],
-            "UserId": deck[1],
-            "deckName": deck[2],
-            "noOfCards": deck[3],
-            "freqRate": deck[4],
-            "heatMapString": deck[5],
-            "newCardsPerDay": deck[6],
-        }
-        return jsonify(deck_stats), 200
-    except mysql.connector.Error as err:
-        return jsonify({"error": str(err)}), 500
+        cursor.execute("UPDATE Decks SET deckName = %s WHERE DeckId = %s AND UserId = %s", (new_name, deck_id, user_id))
+        db.commit()
+        
+        # Check if a deck was updated
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Deck not found or unauthorized"}), 404
 
+        return jsonify({"msg": "Deck renamed successfully"}), 200
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "An error occurred while renaming the deck"}), 500
+    finally:
+        cursor.close()
 
+"""
 @decks_bp.route("/random_active_card", methods=["POST"])
 def get_random_active_card():
     db = get_db()
@@ -110,10 +101,10 @@ def get_random_active_card():
         return jsonify({"error": "User ID is required"}), 400
 
     try:
-        query = """
+        query = ""."
         SELECT cardID FROM Cards
         WHERE deckID = %s AND (isDue = 1 OR isNew = 1)
-        """
+        ""."
         cursor.execute(query, (deck_id,))
         active_cards = cursor.fetchall()
         if not active_cards:
@@ -171,15 +162,15 @@ def get_dormant_cards(deck_id):
 def update_card_status(deck_id, old_status, new_status, amount):
     db = get_db()
     cursor = db.cursor()
-    query = f"""
+   # query = f".""
      UPDATE Cards 
      SET Status = %s 
      WHERE DeckId = %s AND Status = %s 
      LIMIT %s
-     """
+     ""."
     cursor.execute(query, (new_status, deck_id, old_status, amount))
     db.commit()
-
+"""
 
 if __name__ == "__main__":
     print(
