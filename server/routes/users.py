@@ -72,10 +72,23 @@ def check_if_token_in_blacklist(jwt_header, jwt_payload):
     return jwt_payload["jti"] in blacklist
 
 # Protect other routes as usual
-@users_bp.route('/protected', methods=['GET'])
+@users_bp.route('/users/get-decks', methods=['POST'])
 @jwt_required()
-def protected():
-    return jsonify(msg="You are accessing a protected route"), 200
+def get_decks():
+    db = get_db()
+    cursor = db.cursor()
+    user_id = get_jwt_identity()
+
+    try:
+        cursor.execute("SELECT DeckId, deckName FROM Decks WHERE UserId = %s", (user_id,))
+        decks = cursor.fetchall()
+        json_data = [{"DeckId": deck[0], "deckName": deck[1]} for deck in decks]
+        return jsonify(json_data), 200
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "Internal server error - An error occurred while fetching decks."}), 500
+    finally:
+        cursor.close()
 
 if __name__ == "__main__":
     print(
