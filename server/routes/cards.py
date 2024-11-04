@@ -2,11 +2,59 @@ from flask import Blueprint, request, jsonify
 from mysql.connector import Error
 from config import get_db, jwt
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import date, timedelta
 
 cards_bp = Blueprint("cards", __name__)
 
-def update_all_cards():
-    pass
+def update_all_cards(user_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Step 1: Retrieve all DeckIds for the given user
+        cursor.execute("SELECT DeckId FROM Decks WHERE UserId = %s", (user_id,))
+        deck_ids = cursor.fetchall()  # List of (DeckId,)
+
+        # Step 2: For each deck, update cards based on review schedule
+        for (deck_id,) in deck_ids:
+            # Step 2.1: Fetch all cards for this deck
+            cursor.execute("""
+                SELECT cardID, previousReviewDate, intervalLength
+                FROM Cards 
+                WHERE deckID = %s
+            """, (deck_id,))
+            cards = cursor.fetchall()  # List of (cardID, previousReviewDate, intervalLength)
+
+            # Step 2.2: Calculate which cards to activate and update `isActive` accordingly
+            for card_id, previous_review_date, interval_length in cards:
+                # Default to activate if interval or review date is missing
+                activate_card = False
+
+                # Calculate if the card is due for review based on interval and previous review date
+                if previous_review_date and interval_length:
+                    # Calculate the due date based on intervalLength
+                    due_date = previous_review_date + timedelta(days=interval_length)
+                    if due_date <= date.today():
+                        activate_card = True
+                else:
+                    # If either `previousReviewDate` or `intervalLength` is NULL, activate the card
+                    activate_card = True
+
+                # Update isActive based on calculated value
+                cursor.execute("""
+                    UPDATE Cards 
+                    SET isActive = %s 
+                    WHERE cardID = %s
+                """, (1 if activate_card else 0, card_id))
+
+        # Commit changes to the database
+        db.commit()
+
+    except Exception as e:
+        print(f"Error updating cards for user {user_id}: {e}")
+    finally:
+        cursor.close()
+        db.close()
 
 @cards_bp.route('/cards/add', methods=['POST'])
 @jwt_required()
@@ -25,9 +73,9 @@ def add_card():
 
     try:
         cursor.execute("""
-            INSERT INTO Cards (deckId, cardFront, cardBack, cardType, isActive, isNew) 
+            INSERT INTO Cards (deckId, cardFront, cardBack, cardType, isActive, isNew, intervalLength, repetitions, cardEase) 
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (deck_id, card_front, card_back, card_type, 1, 1))  # isActive=0, isNew=1 by default
+        """, (deck_id, card_front, card_back, card_type, 1, 1, 1, 0, 2.5))  # isActive=0, isNew=1 by default
         db.commit()
         return jsonify({"msg": "Card added successfully"}), 201
     except Error as e:
