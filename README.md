@@ -30,6 +30,7 @@ DB_PASSWORD='<your_mysql_password>'
 DB_HOST='localhost'
 DB_NAME='imprint'
 JWT_SECRET_KEY='<server_jwt_secret_key>'
+JWT_ACCESS_TOKEN_EXPIRES_HOURS=48
 ```
 
 Generate a unique JWT secret key using Python `secrets` module:
@@ -38,6 +39,8 @@ Generate a unique JWT secret key using Python `secrets` module:
 import secrets
 print(secrets.token_hex(32))
 ```
+
+`"JWT_ACCESS_TOKEN_EXPIRES_HOURS"` is set to 48 because the JWT implementation does not have a refresh method or refresh token implemented. This is a future to-do.
 
 4. Run the app
 

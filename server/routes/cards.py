@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from flask_cors import CORS
 import mysql.connector
 from config import get_db
 

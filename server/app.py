@@ -1,15 +1,15 @@
 from flask import Flask, g
 from flask_cors import CORS
-from routes.decks import decks_bp
-from routes.cards import cards_bp
-from routes.users import users_bp
+from datetime import timedelta
 from config import Config, jwt, bcrypt
+from routes.decks import decks_bp, cards_bp, users_bp
 
 app = Flask(__name__)
 
 # set the user auth jwt encryption
 
 app.config['JWT_SECRET_KEY'] = Config.JWT_SECRET_KEY
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=Config.JWT_ACCESS_TOKEN_EXPIRES_HOURS)
 bcrypt.init_app(app)
 jwt.init_app(app)
 
