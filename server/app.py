@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, g, redirect
 from flask_cors import CORS
 from datetime import timedelta
 from config import Config, jwt, bcrypt
@@ -34,7 +34,7 @@ app.register_blueprint(llm_bp)
 
 @app.route("/")
 def hello_world():
-    return "<h3>Hello, Imprint!</h3> <p> There is nothing here except the API. Use Vite to access the GUI. </p>"
+    return redirect("/static/index.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
