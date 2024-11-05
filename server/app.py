@@ -5,6 +5,7 @@ from config import Config, jwt, bcrypt
 from routes.users import users_bp
 from routes.decks import decks_bp
 from routes.cards import cards_bp
+from routes.llm import llm_bp
 
 app = Flask(__name__)
 
@@ -29,6 +30,7 @@ def close_db(exception=None):
 app.register_blueprint(users_bp)
 app.register_blueprint(decks_bp)
 app.register_blueprint(cards_bp)
+app.register_blueprint(llm_bp)
 
 @app.route("/")
 def hello_world():
