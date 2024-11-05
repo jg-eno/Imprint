@@ -18,6 +18,7 @@ class Config:
     DB_HOST = os.getenv("DB_HOST")
     DB_NAME = os.getenv("DB_NAME")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     JWT_ACCESS_TOKEN_EXPIRES_HOURS = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES_HOURS"))
 
 def get_db_connection():
