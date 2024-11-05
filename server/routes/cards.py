@@ -1,12 +1,15 @@
 from flask import Blueprint, request, jsonify
 from mysql.connector import Error
-from config import get_db, jwt
+from config import get_db, get_db_connection, jwt
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date, timedelta
 
 cards_bp = Blueprint("cards", __name__)
 
-def update_all_cards(user_id, db, cursor):
+def update_all_cards(user_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+
     try:
         # Step 1: Retrieve all DeckIds for the given user
         cursor.execute("SELECT DeckId FROM Decks WHERE UserId = %s", (user_id,))
