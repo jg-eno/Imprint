@@ -43,8 +43,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <a class="navbar-brand" href="index.html">Imprint</a>
         <div class="ml-auto">
@@ -52,7 +50,6 @@
         </div>
     </nav>
 
-    <!-- Main content -->
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Your Decks</h2>
@@ -60,11 +57,9 @@
         </div>
 
         <div id="decksContainer">
-            <!-- Decks will be loaded here -->
         </div>
     </div>
 
-    <!-- Add Deck Modal -->
     <div class="modal fade" id="addDeckModal" tabindex="-1" role="dialog" aria-labelledby="addDeckModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -85,7 +80,6 @@
         </div>
     </div>
 
-    <!-- Rename Deck Modal -->
     <div class="modal fade" id="renameDeckModal" tabindex="-1" role="dialog" aria-labelledby="renameDeckModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -111,7 +105,6 @@
         $(document).ready(function() {
             loadDecks();
 
-            // Logout functionality
             $("#logoutButton").click(function() {
                 $.ajax({
                     url: "/users/logout",

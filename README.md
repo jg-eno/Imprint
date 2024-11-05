@@ -49,11 +49,4 @@ cd server
 python3 app.py
 ```
 
-and parallely
-
-```bash
-cd client
-npm run dev
-```
-
-**Note:** Currently, the app runs from only the flask server, from `localhost:5000/static/index.html`. This is for the testing stage.
+**Note:** Currently, the app runs from `localhost:5000/static/index.html`.

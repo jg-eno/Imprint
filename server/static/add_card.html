@@ -106,11 +106,9 @@
       </div>
     </center>
     <script>
-      // Extract deck ID from the URL
       const urlParams = new URLSearchParams(window.location.search);
       const deckId = urlParams.get("deck_id");
 
-      // Function to add a card to the deck
       function addCard() {
         const cardFront = $("#cardFront").val();
         const cardBack = $("#cardBack").val();
@@ -143,6 +141,21 @@
         });
       }
 
+      $("#logoutButton").click(function() {
+                $.ajax({
+                    url: "/users/logout",
+                    type: "POST",
+                    headers: { "Authorization": "Bearer " + getCookie("jwt_token") },
+                    success: function() {
+                        document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        window.location.href = "auth.html";
+                    },
+                    error: function() {
+                        alert("Error logging out. Please try again.");
+                    }
+                });
+            });
+
       // Function to generate an alternate card using /llm/generate
       function generateAlternate() {
         const cardFront = $("#cardFront").val();
@@ -159,7 +172,6 @@
           }),
           contentType: "application/json",
           success: function (response) {
-            // Display generated question, options, and answer
             $("#altQuestion").text("Question: " + response.Question);
             $("#altOptions").empty();
             response.Options.forEach((option) => {
@@ -186,13 +198,12 @@
         const token = getCookie("jwt_token");
         const deckId = parseInt(urlParams.get("deck_id"));
 
-        // Construct cardFront by combining question and options
         const questionText = $("#altQuestion").text().replace("Question: ", "");
-        const optionsHtml = $("#altOptions").html(); // retrieves <li> options as HTML
+        const optionsHtml = $("#altOptions").html(); 
         const cardFront = `${questionText}<br><ul>${optionsHtml}</ul>`;
 
         // Construct cardBack by combining answer and reason
-        const answerText = $("#altAnswer").html().replace("Answer: ", ""); // keeps the line breaks
+        const answerText = $("#altAnswer").html().replace("Answer: ", ""); 
 
         $.ajax({
           url: "/cards/add",
@@ -220,7 +231,6 @@
         });
       }
 
-      // Utility function to get JWT token from cookies
       function getCookie(name) {
         let cookieArr = document.cookie.split(";");
         for (let i = 0; i < cookieArr.length; i++) {

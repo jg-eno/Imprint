@@ -257,3 +257,44 @@ The implemented api endpoints are: (All endpoints only accept **POST** requests)
     - **SM-2 Algorithm Logic**:
         - **`q_value` < 3**: Reset `repetitions` and `intervalLength`, decrease `cardEase` (minimum 1.3).
         - **`q_value` >= 3**: Mark as inactive (`isActive = 0`), increment `repetitions`, adjust `intervalLength` and `cardEase` based on performance.
+
+#### /llm
+
+1. **`/llm/generate`**: Generates an alternate question, answer, multiple-choice options, and an explanation based on the provided question and answer.
+
+    - **Request format:** 
+      ```json
+      {
+          "Authorization": "Bearer <users_jwt_token_here>",
+          "question": "<string, max 255 chars>",
+          "answer": "<string, max 255 chars>"
+      }
+      ```
+    
+    - **Response format:**
+        - **200, _Success_**:
+          ```json
+          {
+              "Answer": "<string>",
+              "Options": ["<string>", "<string>", "<string>", "<string>"],
+              "Question": "<string>",
+              "Reason": "<string>"
+          }
+          ```
+          - _Example_:
+            ```json
+            {
+                "Answer": "<string>",
+                "Options": [
+                    "<string>",
+                    "<string>",
+                    "<string>",
+                    "<string>"
+                ],
+                "Question": "<string>",
+                "Reason": "<string>"
+            }
+            ```
+        - **400, _Bad Request_**: `{"error": "Question and answer are required"}`
+        - **401/422/etc., _JWT Authentication Errors_**: JWT key doesn't match.
+        - **500, _Internal Server Error_**: `{"error": "<error details>"}`

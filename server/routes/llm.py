@@ -3,7 +3,7 @@ from langchain_community.utilities import SQLDatabase
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import AIMessage
-from langchain_core.pydantic_v1 import BaseModel,Field
+from pydantic import BaseModel,Field
 from langchain_core.output_parsers import JsonOutputParser
 from flask import Flask,jsonify,request
 from flask import Blueprint, request, jsonify
@@ -20,7 +20,7 @@ llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash",google_api_key=Config.GOOG
 llm_bp = Blueprint("llm", __name__)
 
 @llm_bp.route('/llm/generate', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def add_card():
     data = request.get_json()
     question = data.get("question")

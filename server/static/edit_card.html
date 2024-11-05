@@ -85,13 +85,11 @@
         const cardId = urlParams.get("card_id");
         const token = getCookie("jwt_token");
 
-        // Redirect to auth.html if not logged in
         if (!token) {
           window.location.href = "auth.html";
           return;
         }
 
-        // Function to get JWT token from cookies
         function getCookie(name) {
           const cookieArr = document.cookie.split(";");
           for (let i = 0; i < cookieArr.length; i++) {
@@ -103,7 +101,21 @@
           return null;
         }
 
-        // Fetch card details on page load
+        $("#logoutButton").click(function() {
+                $.ajax({
+                    url: "/users/logout",
+                    type: "POST",
+                    headers: { "Authorization": "Bearer " + getCookie("jwt_token") },
+                    success: function() {
+                        document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        window.location.href = "auth.html";
+                    },
+                    error: function() {
+                        alert("Error logging out. Please try again.");
+                    }
+                });
+            });
+
         $.ajax({
           url: "/cards/get-card",
           type: "POST",
@@ -126,7 +138,6 @@
           },
         });
 
-        // Handle form submission to update card
         $("#editCardForm").submit(function (e) {
           e.preventDefault();
 

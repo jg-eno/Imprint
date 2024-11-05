@@ -11,28 +11,25 @@ def update_all_cards(user_id):
     cursor = db.cursor()
 
     try:
-        # Step 1: Retrieve all DeckIds for the given user
+        # Retrieve all DeckIds for the given user
         cursor.execute("SELECT DeckId FROM Decks WHERE UserId = %s", (user_id,))
-        deck_ids = cursor.fetchall()  # List of (DeckId,)
+        deck_ids = cursor.fetchall()
 
-        # Step 2: For each deck, update cards based on review schedule
+        # For each deck, update cards based on review schedule
         for (deck_id,) in deck_ids:
-            # Step 2.1: Fetch all cards for this deck
+            # Fetch all cards for this deck
             cursor.execute("""
                 SELECT cardID, previousReviewDate, intervalLength
                 FROM Cards 
                 WHERE deckID = %s
             """, (deck_id,))
-            cards = cursor.fetchall()  # List of (cardID, previousReviewDate, intervalLength)
+            cards = cursor.fetchall() 
 
-            # Step 2.2: Calculate which cards to activate and update `isActive` accordingly
+            # Calculate which cards to activate and update `isActive` accordingly
             for card_id, previous_review_date, interval_length in cards:
-                # Default to activate if interval or review date is missing
                 activate_card = False
 
-                # Calculate if the card is due for review based on interval and previous review date
                 if previous_review_date and interval_length:
-                    # Calculate the due date based on intervalLength
                     due_date = previous_review_date + timedelta(days=interval_length)
                     if due_date <= date.today():
                         activate_card = True
@@ -40,14 +37,12 @@ def update_all_cards(user_id):
                     # If either `previousReviewDate` or `intervalLength` is NULL, activate the card
                     activate_card = True
 
-                # Update isActive based on calculated value
                 cursor.execute("""
                     UPDATE Cards 
                     SET isActive = %s 
                     WHERE cardID = %s
                 """, (1 if activate_card else 0, card_id))
 
-        # Commit changes to the database
         db.commit()
 
     except Exception as e:
@@ -231,21 +226,6 @@ def update_card():
           """
         cursor.execute(update_query, (interval_length, card_ease, repetitions, active_stat, 1, card_id))
         db.commit()
-
-        """
-        old user stat code
-        user_id_query = "SELECT UserId FROM Decks WHERE DeckId = %s"
-        cursor.execute(user_id_query, (deck_id,))
-        user_id = cursor.fetchone()[0]
-
-        update_user_stats_query = ".""
-          UPDATE UserStats 
-          SET learningPace = learningPace + 1, deckCount = deckCount + 1 
-          WHERE userId = %s
-          ""."
-        cursor.execute(update_user_stats_query, (user_id,))
-        db.commit()
-        """
 
         return (
             jsonify(

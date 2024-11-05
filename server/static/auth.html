@@ -82,7 +82,6 @@
 
 <script>
     $(document).ready(function() {
-        // Toggle between login and signup forms
         $('#showSignup').click(function() {
             $('#loginForm').hide();
             $('#signupForm').show();
@@ -97,7 +96,6 @@
             $('#errorDialog').hide();
         });
 
-        // Login request
         $('#loginBtn').click(function() {
             const email = $('#loginEmail').val();
             const password = $('#loginPassword').val();
@@ -120,7 +118,6 @@
             });
         });
 
-        // Signup request
         $('#signupBtn').click(function() {
             const username = $('#signupUsername').val();
             const email = $('#signupEmail').val();
