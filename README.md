@@ -12,12 +12,12 @@ To setup:
 git clone https://github.com/vibhaas/imprint.git
 ```
 
-2. Install flask
+2. Install everything in `requirements.txt`
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip3 install flask
+pip3 install -r requirements.txt
 ```
 
 3. Set-up the MySQL database. The raw SQL is in `docs/db/imprint.sql`.
@@ -55,3 +55,5 @@ and parallely
 cd client
 npm run dev
 ```
+
+**Note:** Currently, the app runs from only the flask server, from `localhost:5000/static/index.html`. This is for the testing stage.
