@@ -6,10 +6,7 @@ from datetime import date, timedelta
 
 cards_bp = Blueprint("cards", __name__)
 
-def update_all_cards(user_id):
-    db = get_db()
-    cursor = db.cursor()
-
+def update_all_cards(user_id, db, cursor):
     try:
         # Step 1: Retrieve all DeckIds for the given user
         cursor.execute("SELECT DeckId FROM Decks WHERE UserId = %s", (user_id,))

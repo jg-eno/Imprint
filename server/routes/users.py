@@ -104,7 +104,7 @@ def get_decks():
     cursor = db.cursor()
     user_id = get_jwt_identity()
 
-    update_all_cards(user_id)
+    update_all_cards(user_id, db, cursor)
 
     try:
         cursor.execute("SELECT DeckId, deckName FROM Decks WHERE UserId = %s", (user_id,))

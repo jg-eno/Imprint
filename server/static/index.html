@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprint</title>
+
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-custom {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        #logoutButton {
+            color: white !important;
+            border-color: white !important;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 56px); /* Adjust for navbar height */
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #welcomeContainer h1 {
+            color: #495057;
+            font-weight: bold;
+        }
+
+        #welcomeContainer .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="#">Imprint</a>
+        <div class="ml-auto">
+            <button id="logoutButton" class="btn btn-outline-light" style="display: none;">Logout</button>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div id="welcomeContainer" style="display: none;">
+            <h1 id="greetingMessage"></h1>
+            <a href="decks.html" class="btn btn-primary mt-4">Go to your decks</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function getCookie(name) {
+                let cookieArr = document.cookie.split(";");
+                for (let i = 0; i < cookieArr.length; i++) {
+                    let cookiePair = cookieArr[i].split("=");
+                    if (name === cookiePair[0].trim()) {
+                        return decodeURIComponent(cookiePair[1]);
+                    }
+                }
+                return null;
+            }
+
+            const token = getCookie("jwt_token");
+            if (token) {
+                $.ajax({
+                    url: "/users/get-user",
+                    type: "POST",
+                    headers: { "Authorization": "Bearer " + token },
+                    success: function(response) {
+                        $("#greetingMessage").text("Hello, " + response.username + "!");
+                        $("#welcomeContainer").show();
+                        $("#logoutButton").show();
+                    },
+                    error: function() {
+                        window.location.href = "auth.html";
+                    }
+                });
+            } else {
+                window.location.href = "auth.html";
+            }
+
+            $("#logoutButton").click(function() {
+                $.ajax({
+                    url: "/users/logout",
+                    type: "POST",
+                    headers: { "Authorization": "Bearer " + token },
+                    success: function() {
+                        document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        window.location.href = "auth.html";
+                    },
+                    error: function() {
+                        alert("Error logging out. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

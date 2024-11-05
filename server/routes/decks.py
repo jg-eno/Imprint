@@ -7,7 +7,7 @@ import datetime
 
 decks_bp = Blueprint("decks", __name__)
 
-@decks_bp.route('/users/add-deck', methods=['POST'])
+@decks_bp.route('/decks/add-deck', methods=['POST'])
 @jwt_required()
 def add_deck():
     user_id = get_jwt_identity()
@@ -30,7 +30,7 @@ def add_deck():
     finally:
         cursor.close()
 
-@decks_bp.route('/users/delete-deck', methods=['POST'])
+@decks_bp.route('/decks/delete-deck', methods=['POST'])
 @jwt_required()
 def delete_deck():
     user_id = get_jwt_identity()
@@ -58,7 +58,7 @@ def delete_deck():
     finally:
         cursor.close()
 
-@decks_bp.route('/users/rename-deck', methods=['POST'])
+@decks_bp.route('/decks/rename-deck', methods=['POST'])
 @jwt_required()
 def rename_deck():
     user_id = get_jwt_identity()
