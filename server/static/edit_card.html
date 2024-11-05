@@ -1,23 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App Title</title>
-
-    <link rel="stylesheet" href="bootstrap.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Card</title>
+    <link rel="stylesheet" href="bootstrap.min.css" />
     <script src="jquery-3.7.1.min.js"></script>
     <script src="bootstrap.min.js"></script>
-
     <style>
-
+      body {
+        background-color: #f8f9fa;
+      }
+      .navbar-custom {
+        background-color: #343a40;
+        color: white;
+      }
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      .card-container {
+        text-align: center;
+        border: 1px solid #dedede;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 400px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
     </style>
-</head>
-<body>
-    
-
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <a class="navbar-brand" href="decks.html">Imprint</a>
+      <div class="ml-auto">
+        <button id="logoutButton" class="btn btn-outline-light">Logout</button>
+      </div>
+    </nav>
+    <center>
+      <div class="card-container mt-5">
+        <h3>Edit Card</h3>
+        <form id="editCardForm">
+          <div class="form-group mt-3">
+            <label for="cardFront">Question</label>
+            <input
+              type="text"
+              id="cardFront"
+              class="form-control"
+              maxlength="255"
+              required
+            />
+          </div>
+          <div class="form-group mt-3">
+            <label for="cardBack">Answer</label>
+            <input
+              type="text"
+              id="cardBack"
+              class="form-control"
+              maxlength="255"
+              required
+            />
+          </div>
+          <div class="form-group mt-3">
+            <label for="cardType">Card Type</label>
+            <input
+              type="text"
+              id="cardType"
+              class="form-control"
+              maxlength="50"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary mt-4">
+            Update Card
+          </button>
+        </form>
+      </div>
+    </center>
     <script>
-        
+      $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cardId = urlParams.get("card_id");
+        const token = getCookie("jwt_token");
+
+        // Redirect to auth.html if not logged in
+        if (!token) {
+          window.location.href = "auth.html";
+          return;
+        }
+
+        // Function to get JWT token from cookies
+        function getCookie(name) {
+          const cookieArr = document.cookie.split(";");
+          for (let i = 0; i < cookieArr.length; i++) {
+            const cookiePair = cookieArr[i].split("=");
+            if (name === cookiePair[0].trim()) {
+              return decodeURIComponent(cookiePair[1]);
+            }
+          }
+          return null;
+        }
+
+        // Fetch card details on page load
+        $.ajax({
+          url: "/cards/get-card",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          data: JSON.stringify({ card_id: parseInt(cardId) }),
+          contentType: "application/json",
+          success: function (response) {
+            $("#cardFront").val(response.cardFront);
+            $("#cardBack").val(response.cardBack);
+            $("#cardType").val(response.cardType);
+          },
+          error: function (xhr) {
+            alert(
+              "Error fetching card details: " +
+                (xhr.responseJSON
+                  ? xhr.responseJSON.error
+                  : "An error occurred")
+            );
+            window.location.href = "decks.html";
+          },
+        });
+
+        // Handle form submission to update card
+        $("#editCardForm").submit(function (e) {
+          e.preventDefault();
+
+          $.ajax({
+            url: "/cards/edit",
+            type: "POST",
+            headers: { Authorization: "Bearer " + token },
+            data: JSON.stringify({
+              card_id: parseInt(cardId),
+              cardFront: $("#cardFront").val(),
+              cardBack: $("#cardBack").val(),
+              cardType: $("#cardType").val(),
+            }),
+            contentType: "application/json",
+            success: function () {
+              alert("Card updated successfully!");
+              window.location.href = "decks.html";
+            },
+            error: function (xhr) {
+              alert(
+                "Error updating card: " +
+                  (xhr.responseJSON
+                    ? xhr.responseJSON.error
+                    : "An error occurred")
+              );
+            },
+          });
+        });
+      });
     </script>
-</body>
+  </body>
 </html>

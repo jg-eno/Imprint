@@ -72,10 +72,11 @@ def add_card():
         return jsonify({"error": "Deck ID, cardFront, cardBack, and cardType are required"}), 400
 
     try:
+        print((deck_id, card_front, card_back, card_type, 1, 1, 1, 0, 2.5))
         cursor.execute("""
             INSERT INTO Cards (deckId, cardFront, cardBack, cardType, isActive, isNew, intervalLength, repetitions, cardEase) 
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (deck_id, card_front, card_back, card_type, 1, 1, 1, 0, 2.5))  # isActive=0, isNew=1 by default
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (deck_id, card_front, card_back, card_type, "1", "1", "1", "0", "2.5"))  # isActive=0, isNew=1 by default
         db.commit()
         return jsonify({"msg": "Card added successfully"}), 201
     except Error as e:

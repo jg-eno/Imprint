@@ -1,173 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Imprint - Solve Deck</title>
 
-    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css" />
     <script src="jquery-3.7.1.min.js"></script>
     <script src="bootstrap.min.js"></script>
 
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .navbar-custom {
-            background-color: #343a40;
-            color: white;
-        }
-        .navbar-brand {
-            color: #ffffff !important;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        .card-container {
-            text-align: center;
-            border: 1px solid #dedede;
-            border-radius: 8px;
-            padding: 20px;
-            max-width: 400px;
-            background-color: #ffffff;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .answer-section, .feedback-buttons {
-            margin-top: 20px;
-        }
+      body {
+        background-color: #f8f9fa;
+      }
+      .navbar-custom {
+        background-color: #343a40;
+        color: white;
+      }
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      .card-container {
+        text-align: center;
+        border: 1px solid #dedede;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 400px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .answer-section,
+      .feedback-buttons {
+        margin-top: 20px;
+      }
+      .edit-delete-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <a class="navbar-brand" href="decks.html">Imprint</a>
-        <div class="ml-auto">
-            <button id="logoutButton" class="btn btn-outline-light">Logout</button>
-        </div>
+      <a class="navbar-brand" href="decks.html">Imprint</a>
+      <div class="ml-auto">
+        <button id="logoutButton" class="btn btn-outline-light">Logout</button>
+      </div>
     </nav>
 
-<br><br><br>
+    <br /><br /><br />
     <!-- Main content -->
-     <center>
-    <div class="card-container mt-4">
+    <center>
+      <div class="card-container mt-4">
         <div id="cardContent">
-            <!-- Card front content will be loaded here -->
+          <!-- Card front content will be loaded here -->
         </div>
-        <button id="showAnswerButton" class="btn btn-primary mt-3" onclick="showAnswer()">Show Answer</button>
+        <button
+          id="showAnswerButton"
+          class="btn btn-primary mt-3"
+          onclick="showAnswer()"
+        >
+          Show Answer
+        </button>
 
-        <div id="answerSection" class="answer-section" style="display: none;">
-            <p id="cardBack"></p>
-            <div class="feedback-buttons">
-                <button class="btn btn-danger" onclick="updateCard(0)">Do Again</button>
-                <button class="btn btn-warning" onclick="updateCard(2)">Hard</button>
-                <button class="btn btn-secondary" onclick="updateCard(3)">Medium</button>
-                <button class="btn btn-success" onclick="updateCard(4)">Easy</button>
-            </div>
+        <div id="answerSection" class="answer-section" style="display: none">
+          <p id="cardBack"></p>
+          <div class="feedback-buttons">
+            <button class="btn btn-danger" onclick="updateCard(0)">
+              Do Again
+            </button>
+            <button class="btn btn-warning" onclick="updateCard(2)">
+              Hard
+            </button>
+            <button class="btn btn-secondary" onclick="updateCard(3)">
+              Medium
+            </button>
+            <button class="btn btn-success" onclick="updateCard(4)">
+              Easy
+            </button>
+          </div>
+          <div class="edit-delete-buttons">
+            <button class="btn btn-info" onclick="editCard()">Edit</button>
+            <button class="btn btn-danger" onclick="deleteCard()">
+              Delete
+            </button>
+          </div>
         </div>
-    </div>
-</center>
+      </div>
+    </center>
 
     <script>
-        $(document).ready(function() {
-            const deckId = new URLSearchParams(window.location.search).get("deck_id");
+      $(document).ready(function () {
+        const deckId = new URLSearchParams(window.location.search).get(
+          "deck_id"
+        );
 
-            if (!deckId) {
-                alert("Deck ID is missing.");
-                window.location.href = "index.html";
-                return;
-            }
+        if (!deckId) {
+          alert("Deck ID is missing.");
+          window.location.href = "index.html";
+          return;
+        }
 
-            loadNextCard();
+        loadNextCard();
 
-            $("#logoutButton").click(function() {
-                $.ajax({
-                    url: "/users/logout",
-                    type: "POST",
-                    headers: { "Authorization": "Bearer " + getCookie("jwt_token") },
-                    success: function() {
-                        document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        window.location.href = "auth.html";
-                    },
-                    error: function() {
-                        alert("Error logging out. Please try again.");
-                    }
-                });
-            });
+        $("#logoutButton").click(function () {
+          $.ajax({
+            url: "/users/logout",
+            type: "POST",
+            headers: { Authorization: "Bearer " + getCookie("jwt_token") },
+            success: function () {
+              document.cookie =
+                "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+              window.location.href = "auth.html";
+            },
+            error: function () {
+              alert("Error logging out. Please try again.");
+            },
+          });
         });
+      });
 
-        function getCookie(name) {
-            let cookieArr = document.cookie.split(";");
-            for (let i = 0; i < cookieArr.length; i++) {
-                let cookiePair = cookieArr[i].split("=");
-                if (name === cookiePair[0].trim()) {
-                    return decodeURIComponent(cookiePair[1]);
-                }
+      function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+          let cookiePair = cookieArr[i].split("=");
+          if (name === cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+          }
+        }
+        return null;
+      }
+
+      function loadNextCard() {
+        const deckId = new URLSearchParams(window.location.search).get(
+          "deck_id"
+        );
+        const token = getCookie("jwt_token");
+
+        $.ajax({
+          url: "/decks/get-next-card",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          contentType: "application/json",
+          data: JSON.stringify({ deck_id: parseInt(deckId) }),
+          success: function (card) {
+            if (card) {
+              $("#cardContent").html(card.cardFront);
+              $("#cardBack").html(card.cardBack);
+              $("#answerSection").hide();
+              $("#showAnswerButton").show().prop("disabled", false);
+              window.currentCardID = card.cardID;
+            } else {
+              displayNoActiveCardsMessage();
             }
-            return null;
-        }
+          },
+          error: function (xhr) {
+            if (xhr.status === 404) {
+              displayNoActiveCardsMessage();
+            } else {
+              alert("Error loading card. Please try again.");
+              window.location.href = "auth.html";
+            }
+          },
+        });
+      }
 
-        function loadNextCard() {
-            const deckId = new URLSearchParams(window.location.search).get("deck_id");
-            const token = getCookie("jwt_token");
+      function showAnswer() {
+        $("#showAnswerButton").hide();
+        $("#answerSection").show();
+      }
 
-            $.ajax({
-                url: "/decks/get-next-card",
-                type: "POST",
-                headers: { "Authorization": "Bearer " + token },
-                contentType: "application/json",
-                data: JSON.stringify({ deck_id: parseInt(deckId) }),
-                success: function(card) {
-                    if (card) {
-                        $("#cardContent").text(card.cardFront);
-                        $("#cardBack").text(card.cardBack);
-                        $("#answerSection").hide();
-                        $("#showAnswerButton").show().prop("disabled", false);
-                        window.currentCardID = card.cardID;
-                    } else {
-                        displayNoActiveCardsMessage();
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.status === 404) {
-                        displayNoActiveCardsMessage();
-                    } else {
-                        alert("Error loading card. Please try again.");
-                        window.location.href = "auth.html";
-                    }
-                }
-            });
-        }
+      function updateCard(qValue) {
+        const token = getCookie("jwt_token");
+        const cardId = window.currentCardID;
 
-        function showAnswer() {
-            $("#showAnswerButton").hide();
-            $("#answerSection").show();
-        }
+        $.ajax({
+          url: "/cards/update_card",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          contentType: "application/json",
+          data: JSON.stringify({ card_id: cardId, q_value: qValue }),
+          success: function () {
+            loadNextCard();
+          },
+          error: function () {
+            alert("Error updating card. Please try again.");
+          },
+        });
+      }
 
-        function updateCard(qValue) {
-            const token = getCookie("jwt_token");
-            const cardId = window.currentCardID;
+      function editCard() {
+        const cardId = window.currentCardID;
+        window.location.href = `edit_card.html?card_id=${cardId}`;
+      }
 
-            $.ajax({
-                url: "/cards/update_card",
-                type: "POST",
-                headers: { "Authorization": "Bearer " + token },
-                contentType: "application/json",
-                data: JSON.stringify({ card_id: cardId, q_value: qValue }),
-                success: function() {
-                    loadNextCard();
-                },
-                error: function() {
-                    alert("Error updating card. Please try again.");
-                }
-            });
-        }
+      function deleteCard() {
+        const token = getCookie("jwt_token");
+        const cardId = window.currentCardID;
 
-        function displayNoActiveCardsMessage() {
-            $("#cardContent").text("No active cards in this deck.");
-            $("#showAnswerButton").hide();
-            $("#answerSection").hide();
-        }
+        $.ajax({
+          url: "/cards/delete",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          contentType: "application/json",
+          data: JSON.stringify({ card_id: cardId }),
+          success: function () {
+            alert("Card deleted successfully!");
+            loadNextCard();
+          },
+          error: function (xhr) {
+            alert(
+              "Error deleting card: " +
+                (xhr.responseJSON
+                  ? xhr.responseJSON.error
+                  : "An error occurred")
+            );
+          },
+        });
+      }
+
+      function displayNoActiveCardsMessage() {
+        $("#cardContent").text("No active cards in this deck.");
+        $("#showAnswerButton").hide();
+        $("#answerSection").hide();
+      }
     </script>
-
-</body>
+  </body>
 </html>

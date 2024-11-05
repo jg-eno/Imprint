@@ -1,23 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App Title</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Card - Imprint</title>
 
-    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css" />
     <script src="jquery-3.7.1.min.js"></script>
     <script src="bootstrap.min.js"></script>
 
     <style>
-
+      body {
+        background-color: #f8f9fa;
+      }
+      .navbar-custom {
+        background-color: #343a40;
+        color: white;
+      }
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      .form-container {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+        border: 1px solid #dedede;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .alternate-card {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #dedede;
+        border-radius: 8px;
+        background-color: #f1f1f1;
+      }
     </style>
-</head>
-<body>
-    
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <a class="navbar-brand" href="decks.html">Imprint</a>
+      <div class="ml-auto">
+        <button id="logoutButton" class="btn btn-outline-light">Logout</button>
+      </div>
+    </nav>
+    <center>
+      <!-- Main Form Container -->
+      <div class="form-container mt-5">
+        <h2 class="text-center mb-4">Add a New Card</h2>
+        <form id="addCardForm">
+          <div class="form-group">
+            <label for="cardFront">Question</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cardFront"
+              maxlength="255"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="cardBack">Answer</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cardBack"
+              maxlength="255"
+              required
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary btn-block mt-3"
+            onclick="addCard()"
+          >
+            Add Card
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-block mt-2"
+            onclick="generateAlternate()"
+          >
+            Generate Alternate Card
+          </button>
+        </form>
 
+        <!-- Alternate Card Display -->
+        <div id="alternateCard" class="alternate-card" style="display: none">
+          <h5>Generated Alternate Card</h5>
+          <p id="altQuestion"></p>
+          <ul id="altOptions"></ul>
+          <p id="altAnswer"></p>
+          <button
+            type="button"
+            class="btn btn-success btn-block"
+            onclick="addGeneratedCard()"
+          >
+            Add Alternate Card
+          </button>
+        </div>
+      </div>
+    </center>
     <script>
-        
+      // Extract deck ID from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const deckId = urlParams.get("deck_id");
+
+      // Function to add a card to the deck
+      function addCard() {
+        const cardFront = $("#cardFront").val();
+        const cardBack = $("#cardBack").val();
+        const token = getCookie("jwt_token");
+
+        $.ajax({
+          url: "/cards/add",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          data: JSON.stringify({
+            deck_id: parseInt(deckId),
+            cardFront: cardFront,
+            cardBack: cardBack,
+            cardType: "basic",
+          }),
+          contentType: "application/json",
+          success: function () {
+            alert("Card added successfully!");
+            $("#cardFront").val("");
+            $("#cardBack").val("");
+          },
+          error: function (xhr) {
+            alert(
+              "Error: " +
+                (xhr.responseJSON
+                  ? xhr.responseJSON.error
+                  : "An error occurred while adding the card")
+            );
+          },
+        });
+      }
+
+      // Function to generate an alternate card using /llm/generate
+      function generateAlternate() {
+        const cardFront = $("#cardFront").val();
+        const cardBack = $("#cardBack").val();
+        const token = getCookie("jwt_token");
+
+        $.ajax({
+          url: "/llm/generate",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          data: JSON.stringify({
+            question: cardFront,
+            answer: cardBack,
+          }),
+          contentType: "application/json",
+          success: function (response) {
+            // Display generated question, options, and answer
+            $("#altQuestion").text("Question: " + response.Question);
+            $("#altOptions").empty();
+            response.Options.forEach((option) => {
+              $("#altOptions").append(`<li>${option}</li>`);
+            });
+            $("#altAnswer").html(
+              `Answer: ${response.Answer} <br><small>${response.Reason}</small>`
+            );
+            $("#alternateCard").show();
+          },
+          error: function (xhr) {
+            alert(
+              "Error generating alternate card: " +
+                (xhr.responseJSON
+                  ? xhr.responseJSON.error
+                  : "An error occurred")
+            );
+          },
+        });
+      }
+
+      // Function to add the generated alternate card
+      function addGeneratedCard() {
+        const token = getCookie("jwt_token");
+        const deckId = parseInt(urlParams.get("deck_id"));
+
+        // Construct cardFront by combining question and options
+        const questionText = $("#altQuestion").text().replace("Question: ", "");
+        const optionsHtml = $("#altOptions").html(); // retrieves <li> options as HTML
+        const cardFront = `${questionText}<br><ul>${optionsHtml}</ul>`;
+
+        // Construct cardBack by combining answer and reason
+        const answerText = $("#altAnswer").html().replace("Answer: ", ""); // keeps the line breaks
+
+        $.ajax({
+          url: "/cards/add",
+          type: "POST",
+          headers: { Authorization: "Bearer " + token },
+          data: JSON.stringify({
+            deck_id: deckId,
+            cardFront: cardFront,
+            cardBack: answerText,
+            cardType: "generated",
+          }),
+          contentType: "application/json",
+          success: function () {
+            alert("Alternate card added successfully!");
+            $("#alternateCard").hide();
+          },
+          error: function (xhr) {
+            alert(
+              "Error adding alternate card: " +
+                (xhr.responseJSON
+                  ? xhr.responseJSON.error
+                  : "An error occurred")
+            );
+          },
+        });
+      }
+
+      // Utility function to get JWT token from cookies
+      function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+          let cookiePair = cookieArr[i].split("=");
+          if (name === cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+          }
+        }
+        return null;
+      }
     </script>
-</body>
+  </body>
 </html>
