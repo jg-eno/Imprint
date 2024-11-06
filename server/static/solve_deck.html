@@ -12,11 +12,102 @@
     <style>
       body {
         background-color: #f8f9fa;
+    background-image: url('SP.jpg');
+    background-size: cover; /* Scales the image to cover the entire screen */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center center; /* Centers the image */
+    background-attachment: fixed;
       }
-      .navbar-custom {
-        background-color: #343a40;
-        color: white;
-      }
+      #logoutButton {
+    color: white !important;
+    border: 2px solid white !important;
+    padding: 8px 16px;
+    background: transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    border-radius: 4px;
+    transform: scale(1);
+}
+
+#logoutButton:hover {
+    transform: scale(1.1);  /* Makes the button 10% bigger */
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+#logoutButton:active {
+    transform: scale(1.05);  /* Slightly smaller when clicked */
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+    #logoutButton {
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
+    
+    #logoutButton:hover {
+        transform: scale(1.05);  /* Smaller scale on mobile */
+    }
+}
+.logo-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
+            transition: transform 0.3s ease;
+        }
+.logo-container a{
+    text-decoration: none;
+}
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;                                                                                                                                             
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.8),
+            0 0 20px rgba(147, 112, 219, 0.8),
+            0 0 30px rgba(138, 43, 226, 0.6);
+        background: linear-gradient(135deg, 
+            rgba(75, 0, 130, 0.9),
+            rgba(56, 42, 83, 0.9),
+            rgba(40, 12, 66, 0.9));
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 
+            0 0 10px rgba(147, 112, 219, 0.3),
+            0 0 20px rgba(138, 43, 226, 0.2),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+    }
+
+    .logo-text:hover {
+        text-shadow: 
+            0 0 15px rgba(255, 255, 255, 0.9),
+            0 0 25px rgba(49, 36, 73, 0.9),
+            0 0 35px rgba(138, 43, 226, 0.7);
+        box-shadow: 
+            0 0 15px rgba(66, 46, 107, 0.4),
+            0 0 25px rgba(33, 3, 61, 0.3),
+            inset 0 0 20px rgba(255, 255, 255, 0.15);
+        background: linear-gradient(135deg, 
+            rgba(62, 29, 85, 0.9),
+            rgba(78, 48, 139, 0.9),
+            rgba(65, 36, 92, 0.9));
+    }
       .navbar-brand {
         color: #ffffff !important;
         font-weight: bold;
@@ -45,11 +136,13 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
-      <a class="navbar-brand" href="decks.html">Imprint</a>
-      <div class="ml-auto">
-        <button id="logoutButton" class="btn btn-outline-light">Logout</button>
+      <div class="logo-container">
+          <a href = "index.html"><span class="logo-text">Imprint</span></a>
       </div>
-    </nav>
+      <div class="ml-auto">
+          <button id="logoutButton" class="btn btn-outline-light">Logout</button>
+      </div>
+  </nav>
 
     <br /><br /><br />
     <center>

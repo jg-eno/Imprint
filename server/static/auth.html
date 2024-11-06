@@ -243,13 +243,32 @@
                 }
             });
         });
-
+        function isValidEmail(email) {
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailPattern.test(email);
+        }
         $('#signupBtn').click(function() {
             const username = $('#signupUsername').val();
             const email = $('#signupEmail').val();
             const password = $('#signupPassword').val();
             const confirmPassword = $('#confirmPassword').val();
 
+            if(username == ''){
+                $('#errorDialog').text("Please enter your username").show();
+                return;
+            }
+            if(email == ''){
+                $('#errorDialog').text("Please enter your email").show();
+                return;
+            }
+            if(!isValidEmail(email)){
+                $('#errorDialog').text("Enter a valid email address").show();
+                return;
+            }
+            if(password == ''){
+                $('#errorDialog').text("Please enter your password").show();
+                return;
+            }
             if (password !== confirmPassword) {
                 $('#errorDialog').text("Passwords do not match.").show();
                 return;
