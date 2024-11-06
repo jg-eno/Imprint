@@ -29,9 +29,9 @@ DB_USER='<your_mysql_username>'
 DB_PASSWORD='<your_mysql_password>'
 DB_HOST='localhost'
 DB_NAME='imprint'
+GOOGLE_API_KEY='<your_gemini_api_key>'
 JWT_SECRET_KEY='<server_jwt_secret_key>'
 JWT_ACCESS_TOKEN_EXPIRES_HOURS='48'
-GOOGLE_API_KEY='<your_gemini_api_key>'
 ```
 
 Generate a unique JWT secret key using Python `secrets` module:
