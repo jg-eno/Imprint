@@ -49,4 +49,4 @@ cd server
 python3 app.py
 ```
 
-**Note:** Currently, the app runs from `localhost:5000/static/index.html`.
+**Note:** Currently, the app runs from `localhost:5000`.
